@@ -1229,10 +1229,12 @@ body.dark-mode {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
   });
-</script>
+<script>
+  // your other JS code here
+
   function toggleDark() {
-  document.body.classList.toggle("dark-mode");
-}
-  </script>
+    document.body.classList.toggle("dark-mode");
+  }
+</script>
 </body>
 </html>
