@@ -27,6 +27,28 @@ body.dark-mode {
   --ink:    #F5F5F5;   /* text becomes light */
   --cream:  #0E0E0E;   /* background becomes dark */
   --warm:   #1A1A1A;   /* section background */
+  /* Force visible dark mode */
+body.dark-mode {
+  background: #0E0E0E;
+  color: #F5F5F5;
+}
+
+body.dark-mode nav {
+  background: rgba(20,20,20,0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode .features {
+  background: #111;
+}
+
+body.dark-mode .community {
+  background: #0E0E0E;
+}
+
+body.dark-mode .talent-card {
+  background: #1A1A1A;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
