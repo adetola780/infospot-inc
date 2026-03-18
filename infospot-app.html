@@ -1820,10 +1820,28 @@
 
   // ── SESSION GUARD — redirect if not logged in ──
   (async () => {
+    // First try getSession
     const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { window.location.href = 'index.html'; return; }
-    loadUserProfile(session.user);
-    loadUserWorks(session.user.id);
+    if (session) {
+      loadUserProfile(session.user);
+      loadUserWorks(session.user.id);
+      return;
+    }
+    // If no session yet, listen for auth state change (handles email confirm redirect)
+    const { data: { subscription } } = _supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        loadUserProfile(session.user);
+        loadUserWorks(session.user.id);
+        subscription.unsubscribe();
+      } else if (event === 'SIGNED_OUT') {
+        window.location.href = 'index.html';
+      }
+    });
+    // Give it 2 seconds to resolve, then redirect if still no session
+    setTimeout(async () => {
+      const { data: { session: s } } = await _supabase.auth.getSession();
+      if (!s) window.location.href = 'index.html';
+    }, 2000);
   })();
 
   // ── LOAD PROFILE ──
