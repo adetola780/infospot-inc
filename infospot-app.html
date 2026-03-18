@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INFOSPOT INC — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    /* ── VARIABLES ── */
+    :root {
+      --sun: #F5A623; --fire: #E8390E; --earth: #2D6A4F;
+      --gold: #FFD166; --sky: #06D6A0; --ink: #1A0A00;
+      --cream: #FFF8EE; --warm: #FEF3C7;
+      --border: rgba(26,10,0,0.08); --muted: rgba(26,10,0,0.45);
+      --sidebar-w: 260px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height: 100%; font-family: 'Cabinet Grotesk', sans-serif; color: var(--ink); }
+    body { background: #F5F0E8; transition: background 0.3s, color 0.3s; }
+
+    /* ── DARK MODE ── */
+    body.dark {
+      --ink: #F5EFE6; --cream: #111008; --warm: #1A1508;
+      --border: rgba(245,239,230,0.1); --muted: rgba(245,239,230,0.45);
+      background: #0e0d07;
+    }
+    body.dark .stat-card, body.dark .work-card,
+    body.dark .activity-card, body.dark .form-section,
+    body.dark .plan-card, body.dark .success-box,
+    body.dark .upload-zone { background: #1e1c10; }
+    body.dark .inner-panel { background: #1e1c10; }
+    body.dark .field-group input,
+    body.dark .field-group select,
+    body.dark .field-group textarea { background: #141208; color: var(--ink); }
+
+    /* ── LOADER ── */
+    #loader {
+      position: fixed; inset: 0; background: var(--ink); z-index: 99999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    #loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-logo { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 900; color: white; letter-spacing: -1px; animation: logoPop 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+    .loader-logo span { color: var(--sun); }
+    .loader-tag { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.35); animation: logoPop 0.6s ease both 0.15s; }
+    .loader-bar { width: 160px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+    .loader-fill { height: 100%; background: linear-gradient(90deg, var(--fire), var(--sun)); animation: loadFill 0.7s ease forwards 0.1s; width: 0; border-radius: 10px; }
+    @keyframes logoPop { from { opacity:0; transform:scale(0.7); } to { opacity:1; transform:scale(1); } }
+    @keyframes loadFill { from { width:0; } to { width:100%; } }
+
+    /* ── LAYOUT ── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--ink);
+      color: white;
+      display: flex; flex-direction: column;
+      padding: 28px 16px;
+      flex-shrink: 0;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    .sidebar.collapsed { width: 72px; }
+
+    .sidebar-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 8px; margin-bottom: 32px;
+    }
+    .sidebar-logo {
+      font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900;
+      letter-spacing: -0.5px; white-space: nowrap; overflow: hidden;
+      transition: opacity 0.2s;
+    }
+    .sidebar-logo span { color: var(--sun); }
+    .sidebar.collapsed .sidebar-logo { opacity: 0; width: 0; }
+
+    .sidebar-toggle {
+      background: none; border: none; color: rgba(255,255,255,0.5);
+      cursor: pointer; font-size: 1.3rem; padding: 4px 6px;
+      border-radius: 8px; transition: all 0.2s; flex-shrink: 0;
+      line-height: 1;
+    }
+    .sidebar-toggle:hover { color: white; background: rgba(255,255,255,0.1); }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow: hidden; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px; border-radius: 12px;
+      cursor: pointer; font-size: 0.88rem; font-weight: 500;
+      opacity: 0.55; transition: all 0.2s;
+      border: none; background: none; color: white;
+      width: 100%; text-align: left; white-space: nowrap;
+    }
+    .nav-item:hover { opacity: 0.9; background: rgba(255,255,255,0.06); }
+    .nav-item.active { opacity: 1; background: rgba(245,166,35,0.15); color: var(--sun); }
+    .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; flex-shrink: 0; }
+    .nav-label { transition: opacity 0.2s; }
+    .sidebar.collapsed .nav-label { opacity: 0; width: 0; overflow: hidden; }
+    .sidebar.collapsed .nav-item { justify-content: center; padding: 11px; }
+
+    .nav-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
+
+    .sidebar-upgrade {
+      background: linear-gradient(135deg, var(--fire), #c0300a);
+      border-radius: 14px; padding: 16px; margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+    .sidebar.collapsed .sidebar-upgrade { display: none; }
+    .sidebar-upgrade h4 { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .sidebar-upgrade p { font-size: 0.72rem; opacity: 0.8; margin-bottom: 12px; line-height: 1.5; }
+    .btn-upgrade {
+      width: 100%; padding: 8px; background: white; color: var(--fire);
+      border: none; border-radius: 8px; font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700; font-size: 0.78rem; cursor: pointer;
+    }
+    .btn-upgrade:hover { opacity: 0.9; }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1; overflow-y: auto; padding: 32px 36px;
+      display: flex; flex-direction: column; gap: 0;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .topbar-greeting h1 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: -0.5px; }
+    .topbar-greeting p { font-size: 0.85rem; color: var(--muted); margin-top: 3px; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    /* Dark toggle */
+    .dark-btn {
+      background: none; border: 1.5px solid var(--border);
+      border-radius: 50%; width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; transition: all 0.2s;
+    }
+    .dark-btn:hover { border-color: var(--sun); background: rgba(245,166,35,0.1); }
+    body.dark .dark-btn { border-color: rgba(245,239,230,0.2); }
+
+    /* Notification */
+    .notif-wrap { position: relative; }
+    .notif-btn {
+      background: none; border: 1.5px solid var(--border);
+      border-radius: 50%; width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; transition: all 0.2s; position: relative;
+    }
+    .notif-btn:hover { border-color: var(--sun); background: rgba(245,166,35,0.1); }
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; background: var(--fire);
+      border-radius: 50%; border: 2px solid #F5F0E8;
+    }
+    body.dark .notif-dot { border-color: #0e0d07; }
+    .notif-dropdown {
+      display: none; position: absolute; top: 48px; right: 0;
+      width: 290px; background: white; border-radius: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 12px 40px rgba(26,10,0,0.12); z-index: 500; overflow: hidden;
+    }
+    .notif-dropdown.open { display: block; animation: dropIn 0.2s ease; }
+    body.dark .notif-dropdown { background: #1e1c10; }
+    .notif-head {
+      padding: 14px 16px; font-family: 'Fraunces', serif; font-weight: 700;
+      font-size: 0.92rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .notif-clear { font-size: 0.7rem; font-weight: 600; color: var(--fire); cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif; }
+    .notif-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item p { font-weight: 600; margin-bottom: 1px; }
+    .notif-item span { font-size: 0.7rem; color: var(--muted); }
+
+    /* Free badge */
+    .free-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(232,57,14,0.1); color: var(--fire);
+      font-size: 0.75rem; font-weight: 700;
+      padding: 6px 14px; border-radius: 50px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .free-badge:hover { background: rgba(232,57,14,0.18); }
+
+    /* Profile */
+    .profile-wrap { position: relative; }
+    .profile-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sun), var(--fire));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: white;
+      cursor: pointer; transition: transform 0.2s;
+    }
+    .profile-avatar:hover { transform: scale(1.1); }
+    .profile-dropdown {
+      display: none; position: absolute; top: 50px; right: 0;
+      width: 230px; background: white; border-radius: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 12px 40px rgba(26,10,0,0.12); z-index: 500; overflow: hidden;
+    }
+    .profile-dropdown.open { display: block; animation: dropIn 0.2s ease; }
+    body.dark .profile-dropdown { background: #1e1c10; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .profile-head {
+      padding: 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .profile-head-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sun), var(--fire));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .profile-name { font-weight: 700; font-size: 0.88rem; }
+    .profile-email { font-size: 0.7rem; color: var(--muted); word-break: break-all; }
+    .profile-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 16px; font-size: 0.84rem; font-weight: 500;
+      cursor: pointer; transition: background 0.15s;
+      border: none; background: none; width: 100%; text-align: left;
+      color: var(--ink); font-family: 'Cabinet Grotesk', sans-serif;
+      text-decoration: none;
+    }
+    .profile-item:hover { background: rgba(245,166,35,0.08); }
+    .profile-item.danger { color: var(--fire); }
+    .profile-item.danger:hover { background: rgba(232,57,14,0.06); }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 16px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: white; border-radius: 18px; padding: 22px;
+      border: 1.5px solid var(--border); position: relative; overflow: hidden;
+      transition: transform 0.25s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.25s;
+    }
+    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(26,10,0,0.1); }
+    .stat-card::before {
+      content:''; position:absolute; top:-20px; right:-20px;
+      width:80px; height:80px; border-radius:50%; opacity:0.08;
+    }
+    .stat-card:nth-child(1)::before { background: var(--fire); }
+    .stat-card:nth-child(2)::before { background: var(--earth); }
+    .stat-card:nth-child(3)::before { background: var(--sun); }
+    .stat-card:nth-child(4)::before { background: var(--sky); }
+    .stat-icon { font-size: 1.4rem; margin-bottom: 10px; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+
+    /* ── TABS ── */
+    .dash-tabs {
+      display: flex; gap: 4px;
+      background: rgba(26,10,0,0.05); border-radius: 14px;
+      padding: 4px; margin-bottom: 28px;
+    }
+    body.dark .dash-tabs { background: rgba(255,255,255,0.05); }
+    .dash-tab {
+      flex: 1; padding: 10px 16px; border: none; border-radius: 10px;
+      background: none; font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .dash-tab:hover { color: var(--ink); }
+    .dash-tab.active { background: white; color: var(--ink); box-shadow: 0 2px 8px rgba(26,10,0,0.08); }
+    body.dark .dash-tab.active { background: #1e1c10; }
+    .dash-section { display: none; }
+    .dash-section.active { display: block; }
+
+    /* ── SECTION HEADER ── */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-header h2 { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 700; }
+    .btn-small {
+      padding: 8px 18px; background: var(--fire); color: white;
+      border: none; border-radius: 50px; font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-small:hover { opacity: 0.85; }
+
+    /* ── WORKS GRID ── */
+    .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; margin-bottom: 28px; }
+    .work-card {
+      background: white; border-radius: 16px; padding: 18px;
+      border: 1.5px solid var(--border);
+      transition: transform 0.25s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.25s;
+    }
+    .work-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(26,10,0,0.1); }
+    .work-type-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 12px; }
+    .work-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+    .work-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 10px; }
+    .work-protected { display: inline-flex; align-items: center; gap: 4px; background: #ECFDF5; color: #059669; font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 44px 20px; background: white; border-radius: 16px; border: 1.5px dashed var(--border); }
+    body.dark .empty-state { background: #1e1c10; }
+    .empty-state .e-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-state h3 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+    .empty-state p { font-size: 0.82rem; color: var(--muted); margin-bottom: 14px; }
+
+    /* ── TWO COL ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .activity-card { background: white; border-radius: 18px; padding: 22px; border: 1.5px solid var(--border); }
+    body.dark .activity-card { background: #1e1c10; }
+    .activity-card h3 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
+    .activity-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+    .activity-text p { font-size: 0.82rem; font-weight: 500; }
+    .activity-text span { font-size: 0.7rem; color: var(--muted); }
+    .workshop-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: center; }
+    .workshop-item:last-child { border-bottom: none; }
+    .workshop-date { width: 40px; text-align: center; flex-shrink: 0; }
+    .workshop-date .day { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 900; color: var(--fire); line-height: 1; }
+    .workshop-date .mon { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+    .workshop-info p { font-size: 0.8rem; font-weight: 600; margin-bottom: 1px; }
+    .workshop-info span { font-size: 0.7rem; color: var(--muted); }
+    .workshop-lock { font-size: 0.9rem; margin-left: auto; opacity: 0.4; }
+
+    /* ── REGISTER FORM ── */
+    .form-section { background: white; border-radius: 20px; padding: 26px; border: 1.5px solid var(--border); margin-bottom: 18px; }
+    .form-section h3 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field-group { margin-bottom: 14px; }
+    .field-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 5px; }
+    .field-group input, .field-group select, .field-group textarea {
+      width: 100%; padding: 11px 13px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 0.88rem; background: #FAFAFA; color: var(--ink);
+      outline: none; transition: border-color 0.2s;
+    }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: var(--fire); background: white; }
+    .field-group textarea { resize: vertical; min-height: 80px; }
+
+    .upload-zone {
+      border: 2px dashed rgba(232,57,14,0.3); border-radius: 18px;
+      padding: 44px 28px; text-align: center; background: white;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 18px;
+    }
+    .upload-zone:hover { border-color: var(--fire); background: rgba(232,57,14,0.02); }
+    .upload-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .upload-zone h3 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .upload-zone p { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; }
+    .upload-types { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+    .type-tag { background: var(--warm); color: var(--ink); font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+
+    .cert-preview { background: var(--ink); color: white; border-radius: 18px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .cert-preview::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(245,166,35,0.2) 0%, transparent 70%); }
+    .cert-preview-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.4; margin-bottom: 8px; }
+    .cert-preview h3 { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
+    .cert-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+    .cert-field { display: flex; flex-direction: column; gap: 2px; }
+    .cert-field-label { font-size: 0.62rem; opacity: 0.4; text-transform: uppercase; letter-spacing: 1px; }
+    .cert-field-value { font-size: 0.8rem; font-weight: 600; }
+    .cert-id { position: absolute; bottom: 18px; right: 24px; font-size: 0.62rem; opacity: 0.3; font-family: monospace; }
+
+    .btn-register {
+      width: 100%; padding: 15px; background: var(--fire); color: white;
+      border: none; border-radius: 13px; font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700; font-size: 0.95rem; cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-register:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    /* ── INNER PAGES (Community, Workshops, Messages, Settings) ── */
+    .inner-overlay {
+      display: none; position: absolute; inset: 0;
+      background: #F5F0E8; overflow-y: auto; padding: 32px 36px;
+      z-index: 10; animation: fadeUp 0.3s ease;
+    }
+    body.dark .inner-overlay { background: #0e0d07; }
+    .inner-overlay.open { display: block; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .inner-back { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--muted); cursor: pointer; background: none; border: none; margin-bottom: 24px; transition: color 0.2s; font-family: 'Cabinet Grotesk', sans-serif; }
+    .inner-back:hover { color: var(--ink); }
+    .inner-title { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .inner-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+    .inner-panel { background: white; border-radius: 20px; padding: 32px; border: 1.5px solid var(--border); text-align: center; }
+    .inner-panel .icon { font-size: 3rem; margin-bottom: 14px; }
+    .inner-panel h2 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 8px; }
+    .inner-panel p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; max-width: 340px; margin: 0 auto 20px; }
+    .coming-badge { display: inline-block; background: rgba(245,166,35,0.15); color: var(--sun); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 6px 16px; border-radius: 50px; }
+
+    /* Settings rows */
+    .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-btn { padding: 7px 18px; border: none; border-radius: 50px; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+
+    /* ── SUCCESS OVERLAY ── */
+    .success-overlay { position: fixed; inset: 0; background: rgba(26,10,0,0.6); z-index: 8000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .success-overlay.show { display: flex; }
+    .success-box { background: white; border-radius: 24px; padding: 44px; text-align: center; max-width: 380px; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+    @keyframes popIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
+    .success-icon { font-size: 3rem; margin-bottom: 14px; }
+    .success-box h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+    .success-box p { font-size: 0.86rem; color: var(--muted); line-height: 1.6; margin-bottom: 22px; }
+    .btn-success { padding: 11px 30px; background: var(--fire); color: white; border: none; border-radius: 50px; font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
+
+    /* ── TOAST ── */
+    #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--earth); color: white; padding: 13px 26px; border-radius: 50px; font-weight: 700; font-size: 0.86rem; z-index: 9999; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+
+    /* ── MOBILE ── */
+    .mobile-top-bar {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 56px;
+      background: var(--ink);
+      z-index: 300;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+    }
+    .mobile-top-bar.show { display: flex; }
+    .mobile-hamburger {
+      background: none; border: none;
+      color: white; font-size: 1.3rem;
+      cursor: pointer; padding: 4px 8px;
+    }
+    .mobile-top-logo { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 900; color: white; flex: 1; }
+    .mobile-top-logo span { color: var(--sun); }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(26,10,0,0.5);
+      z-index: 198;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-backdrop.show { display: block; }
+
+    @media (max-width: 768px) {
+      .mobile-top-bar { display: flex; }
+      .app { flex-direction: column; }
+      .sidebar {
+        position: fixed; top: 0; left: -280px; bottom: 0;
+        width: 260px !important;
+        z-index: 199;
+        transition: left 0.3s ease;
+        padding-top: 72px;
+      }
+      .sidebar.mobile-open { left: 0; }
+      .sidebar.collapsed { left: -280px; }
+      .main { padding: 80px 20px 24px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+      .inner-overlay { padding: 80px 20px 24px; }
+      .topbar { display: none; }
+    }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .main { padding: 24px 20px; }
+      .sidebar { position: fixed; top:0; left:0; bottom:0; z-index:200; }
+      .sidebar.collapsed { width: 0; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">INFOSPOT<span>.</span></div>
+  <div class="loader-tag">Dashboard</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- APP -->
+<!-- MOBILE TOP BAR -->
+<div class="mobile-top-bar" id="mobileTopBar">
+  <button class="mobile-hamburger" onclick="toggleMobileSidebar()">☰</button>
+  <div class="mobile-top-logo">INFOSPOT<span>.</span></div>
+  <button class="dark-btn" style="border-color:rgba(255,255,255,0.2);color:white;" onclick="toggleDark()">🌙</button>
+  <div class="profile-wrap">
+    <div class="profile-avatar" id="mobileProfileAvatar" onclick="toggleProfile()" style="width:34px;height:34px;font-size:0.85rem;">A</div>
+    <div class="profile-dropdown" id="profileDropdown2" style="right:0;">
+      <div class="profile-head">
+        <div class="profile-head-avatar" id="mobileProfileHeadAvatar">A</div>
+        <div><div class="profile-name" id="mobileProfileName">...</div><div class="profile-email" id="mobileProfileEmail"></div></div>
+      </div>
+      <button class="profile-item danger" onclick="signOut()">🚪 Sign Out</button>
+    </div>
+  </div>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">INFOSPOT<span>.</span></div>
+      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">≡</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="navDashboard" onclick="showSection('overview')">
+        <span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🌍</span><span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='infospot-legal.html'">
+        <span class="nav-icon">⚖️</span><span class="nav-label">Legal Booking</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='infospot-outsource.html'">
+        <span class="nav-icon">🛍️</span><span class="nav-label">Services</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" onclick="openInner('community')">
+        <span class="nav-icon">🤝</span><span class="nav-label">Community</span>
+      </button>
+      <button class="nav-item" onclick="openInner('workshops')">
+        <span class="nav-icon">📚</span><span class="nav-label">Workshops</span>
+      </button>
+      <button class="nav-item" onclick="openInner('messages')">
+        <span class="nav-icon">💬</span><span class="nav-label">Messages</span>
+      </button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" onclick="openInner('settings')">
+        <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-upgrade">
+      <h4>Go Premium 🔥</h4>
+      <p>Unlimited works & all workshops for $10/mo.</p>
+      <button class="btn-upgrade" onclick="goStripe()">Upgrade Now →</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="mainContent">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-greeting">
+        <h1 id="greeting">Good morning 👋</h1>
+        <p>Here's what's happening with your creative work today.</p>
+      </div>
+      <div class="topbar-right">
+
+        <!-- Dark Mode -->
+        <button class="dark-btn" id="darkBtn" onclick="toggleDark()" title="Dark mode">🌙</button>
+
+        <!-- Notifications -->
+        <div class="notif-wrap">
+          <button class="notif-btn" onclick="toggleNotif()">
+            🔔<span class="notif-dot" id="notifDot"></span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-head">Notifications <span class="notif-clear" onclick="clearNotif()">Mark all read</span></div>
+            <div class="notif-item"><div style="font-size:1.1rem;flex-shrink:0">🛡️</div><div><p>Welcome to INFOSPOT!</p><span>Register your first work to get started</span></div></div>
+            <div class="notif-item"><div style="font-size:1.1rem;flex-shrink:0">👑</div><div><p>Upgrade to Premium</p><span>Unlock unlimited registrations</span></div></div>
+          </div>
+        </div>
+
+        <!-- Free badge -->
+        <div class="free-badge" onclick="goStripe()">✦ Free Plan — Upgrade</div>
+
+        <!-- Profile -->
+        <div class="profile-wrap">
+          <div class="profile-avatar" id="profileAvatar" onclick="toggleProfile()">A</div>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-head">
+              <div class="profile-head-avatar" id="profileHeadAvatar">A</div>
+              <div>
+                <div class="profile-name" id="profileName">Loading...</div>
+                <div class="profile-email" id="profileEmail"></div>
+              </div>
+            </div>
+            <a href="infospot-app.html" class="profile-item">🏠 Dashboard</a>
+            <button class="profile-item" onclick="openInner('settings'); toggleProfile();">⚙️ Settings</button>
+            <button class="profile-item" onclick="toggleDark(); toggleProfile();">🌙 Toggle Dark Mode</button>
+            <button class="profile-item danger" onclick="signOut()">🚪 Sign Out</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon">🛡️</div><div class="stat-value" id="statWorks">0</div><div class="stat-label">Works Protected</div></div>
+      <div class="stat-card"><div class="stat-icon">👁️</div><div class="stat-value" id="statViews">0</div><div class="stat-label">Profile Views</div></div>
+      <div class="stat-card"><div class="stat-icon">🤝</div><div class="stat-value" id="statConnections">0</div><div class="stat-label">Connections</div></div>
+      <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-value">🔒</div><div class="stat-label">Workshops</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="dash-tabs">
+      <button class="dash-tab active" id="tabOverview" onclick="switchTab('overview', this)">📊 Overview</button>
+      <button class="dash-tab" id="tabRegister" onclick="switchTab('register', this)">🛡️ Register Work</button>
+    </div>
+
+    <!-- OVERVIEW SECTION -->
+    <div class="dash-section active" id="secOverview">
+      <div class="section-header">
+        <h2>Your Registered Works</h2>
+        <button class="btn-small" onclick="switchTab('register', document.getElementById('tabRegister'))">+ Register New Work</button>
+      </div>
+      <div class="works-grid" id="worksGrid">
+        <div class="empty-state" id="worksEmpty">
+          <div class="e-icon">🛡️</div>
+          <h3>No works registered yet</h3>
+          <p>Register your first creative work to get a certificate of ownership.</p>
+          <button class="btn-small" onclick="switchTab('register', document.getElementById('tabRegister'))">+ Register Your First Work</button>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="activity-card">
+          <h3>Recent Activity</h3>
+          <div id="activityFeed">
+            <div style="text-align:center;padding:28px 16px;">
+              <div style="font-size:1.6rem;margin-bottom:8px;">📋</div>
+              <div style="font-size:0.8rem;color:var(--muted);">Your activity will appear here.</div>
+            </div>
+          </div>
+        </div>
+        <div class="activity-card">
+          <h3>Upcoming Workshops 🔒</h3>
+          <div class="workshop-item"><div class="workshop-date"><div class="day">18</div><div class="mon">Mar</div></div><div class="workshop-info"><p>Music Copyright Masterclass</p><span>Tunde Adewale · Online</span></div><div class="workshop-lock">🔒</div></div>
+          <div class="workshop-item"><div class="workshop-date"><div class="day">22</div><div class="mon">Mar</div></div><div class="workshop-info"><p>How to License Your Art</p><span>Adaeze Obi · Online</span></div><div class="workshop-lock">🔒</div></div>
+          <div class="workshop-item"><div class="workshop-date"><div class="day">01</div><div class="mon">Apr</div></div><div class="workshop-info"><p>Afrobeats Production 101</p><span>Kemi Falola · Lagos</span></div><div class="workshop-lock">🔒</div></div>
+          <div style="margin-top:14px"><button class="btn-small" onclick="goStripe()" style="width:100%">Unlock Workshops with Premium →</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER SECTION -->
+    <div class="dash-section" id="secRegister">
+      <h2 style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:6px;">Register Your Work</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-bottom:24px;">Upload your creative work and get an official timestamped certificate.</p>
+
+      <div class="upload-zone" id="uploadZone"
+        ondragover="this.classList.add('drag');event.preventDefault()"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)"
+        onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)"/>
+        <div class="upload-icon" id="uploadIcon">📁</div>
+        <h3 id="uploadTitle">Drop your file here or click to browse</h3>
+        <p id="uploadDesc">Encrypted and stored securely. Only you can access it.</p>
+        <div class="upload-types">
+          <span class="type-tag">🎵 MP3/WAV</span>
+          <span class="type-tag">🎨 JPG/PNG</span>
+          <span class="type-tag">📄 PDF</span>
+          <span class="type-tag">🎬 MP4</span>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Work Details</h3>
+        <div class="field-row">
+          <div class="field-group"><label>Title of Work *</label><input type="text" id="workTitle" placeholder="e.g. Afrobeats Collection Vol.2" oninput="updateCert()"/></div>
+          <div class="field-group"><label>Type of Work *</label>
+            <select id="workType" onchange="updateCert()">
+              <option value="">Select type...</option>
+              <option value="🎵 Music">🎵 Music</option>
+              <option value="🎨 Visual Art">🎨 Visual Art</option>
+              <option value="📸 Photography">📸 Photography</option>
+              <option value="🎬 Video / Film">🎬 Video / Film</option>
+              <option value="✍️ Written Work">✍️ Written Work</option>
+              <option value="🎭 Performance">🎭 Performance</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group"><label>Description</label><textarea placeholder="Describe your work..."></textarea></div>
+        <div class="field-row">
+          <div class="field-group"><label>Your Full Name *</label><input type="text" id="creatorName" placeholder="Your name" oninput="updateCert()"/></div>
+          <div class="field-group"><label>Country</label>
+            <select id="creatorCountry">
+              <option>Nigeria</option><option>Ghana</option><option>Kenya</option>
+              <option>South Africa</option><option>Côte d'Ivoire</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-preview">
+        <div class="cert-preview-label">🏆 INFOSPOT Certificate of Ownership</div>
+        <h3 id="certTitle">Your Work Title</h3>
+        <div class="cert-meta">
+          <div class="cert-field"><div class="cert-field-label">Creator</div><div class="cert-field-value" id="certCreator">—</div></div>
+          <div class="cert-field"><div class="cert-field-label">Type</div><div class="cert-field-value" id="certType">—</div></div>
+          <div class="cert-field"><div class="cert-field-label">Registered</div><div class="cert-field-value" id="certDate">—</div></div>
+          <div class="cert-field"><div class="cert-field-label">Status</div><div class="cert-field-value" style="color:var(--sky)">✓ Protected</div></div>
+        </div>
+        <div class="cert-id" id="certId">CERT-XXXXXX</div>
+      </div>
+
+      <button class="btn-register" onclick="submitWork()">🛡️ Register & Protect This Work</button>
+    </div>
+
+    <!-- INNER PAGES OVERLAY -->
+    <div class="inner-overlay" id="innerOverlay">
+      <button class="inner-back" onclick="closeInner()">← Back to Dashboard</button>
+
+      <!-- Community -->
+      <div id="innerCommunity" style="display:none">
+        <div class="inner-title">🤝 Community</div>
+        <div class="inner-sub">Connect with African creatives across 18 countries</div>
+        <div class="inner-panel"><div class="icon">🌍</div><h2>Community is Coming</h2><p>A space for African musicians, artists and creatives to connect, collaborate and grow together.</p><div class="coming-badge">✦ Launching Soon</div></div>
+      </div>
+
+      <!-- Workshops -->
+      <div id="innerWorkshops" style="display:none">
+        <div class="inner-title">📚 Workshops</div>
+        <div class="inner-sub">Masterclasses for African creatives</div>
+        <div class="inner-panel"><div class="icon">🎓</div><h2>Unlock with Premium</h2><p>Live and recorded masterclasses on music production, copyright law, art business and more.</p><button class="btn-small" onclick="goStripe()" style="margin-top:4px">Upgrade to Premium →</button></div>
+      </div>
+
+      <!-- Messages -->
+      <div id="innerMessages" style="display:none">
+        <div class="inner-title">💬 Messages</div>
+        <div class="inner-sub">Chat with fellow creatives</div>
+        <div class="inner-panel"><div class="icon">💬</div><h2>Messages is Coming</h2><p>Direct messaging with artists, producers and creatives on INFOSPOT.</p><div class="coming-badge">✦ Launching Soon</div></div>
+      </div>
+
+      <!-- Settings -->
+      <div id="innerSettings" style="display:none">
+        <div class="inner-title">⚙️ Settings</div>
+        <div class="inner-sub">Manage your account and preferences</div>
+        <div class="inner-panel" style="text-align:left;padding:28px;">
+          <div class="settings-row"><span>Dark Mode</span><button class="settings-btn" onclick="toggleDark()" style="background:var(--fire);color:white;">Toggle</button></div>
+          <div class="settings-row"><span>Notifications</span><span style="font-size:0.8rem;color:var(--muted);">Coming soon</span></div>
+          <div class="settings-row"><span>Sign Out</span><button class="settings-btn" onclick="signOut()" style="background:rgba(232,57,14,0.1);color:var(--fire);">Sign Out</button></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon" id="successIcon">🎉</div>
+    <h2 id="successTitle">Success!</h2>
+    <p id="successMsg">Your action was completed.</p>
+    <button class="btn-success" onclick="closeSuccess()">Back to Dashboard</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const SUPABASE_URL = 'https://khfdgdcvgknlgnvwddsb.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoZmRnZGN2Z2tubGdudndkZHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTAyOTIsImV4cCI6MjA4OTE4NjI5Mn0.BBbxDRmJc-2g503XrYgX6D8bGRvqug5K-PM7CC-btoM';
+  const STRIPE_URL = 'https://buy.stripe.com/test_8x200c7CabTu3okeN3dAk00';
+  const { createClient } = supabase;
+  const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+  // ── MOBILE SIDEBAR ──
+  function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    sidebar.classList.toggle('mobile-open');
+    backdrop.classList.toggle('show');
+  }
+  function closeMobileSidebar() {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('sidebarBackdrop').classList.remove('show');
+  }
+
+  // Close sidebar when nav item clicked on mobile
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeMobileSidebar();
+    });
+  });
+
+  // Show mobile top bar
+  document.getElementById('mobileTopBar').classList.add('show');
+
+  // ── LOADER ──
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loader').classList.add('hide'), 800);
+  });
+
+  // ── DARK MODE ──
+  function toggleDark() {
+    const dark = document.body.classList.toggle('dark');
+    document.getElementById('darkBtn').textContent = dark ? '☀️' : '🌙';
+    localStorage.setItem('infospotDark', dark ? '1' : '');
+  }
+  if (localStorage.getItem('infospotDark')) {
+    document.body.classList.add('dark');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('darkBtn');
+      if (btn) btn.textContent = '☀️';
+    });
+  }
+
+  // ── SIDEBAR TOGGLE ──
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const collapsed = sidebar.classList.toggle('collapsed');
+    document.getElementById('sidebarToggle').textContent = collapsed ? '≡' : '✕';
+  }
+
+  // ── SESSION ──
+  let currentUser = null;
+
+  _supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      localStorage.removeItem('infospotUser');
+      window.location.href = 'index.html';
+    } else if (session) {
+      currentUser = session.user;
+      localStorage.setItem('infospotUser', JSON.stringify({
+        id: session.user.id,
+        email: session.user.email,
+        full_name: session.user.user_metadata?.full_name || ''
+      }));
+      initDashboard(session.user);
+    }
+  });
+
+  // Load from cache for instant display
+  const cached = localStorage.getItem('infospotUser');
+  if (cached) {
+    try {
+      const u = JSON.parse(cached);
+      initDashboard({ id: u.id, email: u.email, user_metadata: { full_name: u.full_name } });
+    } catch(e) {}
+  } else {
+    // No cache — check session, redirect if none
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) window.location.href = 'index.html';
+    });
+  }
+
+  function initDashboard(user) {
+    const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Artist';
+    const firstName = fullName.split(' ')[0];
+    const initial = firstName.charAt(0).toUpperCase();
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+    document.getElementById('greeting').textContent = `${greeting}, ${firstName} 👋`;
+    document.getElementById('profileAvatar').textContent = initial;
+    document.getElementById('profileHeadAvatar').textContent = initial;
+    document.getElementById('profileName').textContent = fullName;
+    document.getElementById('profileEmail').textContent = user.email || '';
+    // Mobile profile
+    const mAvatar = document.getElementById('mobileProfileAvatar');
+    const mHead = document.getElementById('mobileProfileHeadAvatar');
+    const mName = document.getElementById('mobileProfileName');
+    const mEmail = document.getElementById('mobileProfileEmail');
+    if (mAvatar) mAvatar.textContent = initial;
+    if (mHead) mHead.textContent = initial;
+    if (mName) mName.textContent = fullName;
+    if (mEmail) mEmail.textContent = user.email || '';
+    document.getElementById('creatorName').value = fullName;
+    updateCert();
+
+    if (user.id) loadWorks(user.id);
+  }
+
+  async function loadWorks(userId) {
+    const { data: works } = await _supabase.from('works').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (!works || works.length === 0) return;
+
+    document.getElementById('statWorks').textContent = works.length;
+    document.getElementById('worksEmpty').style.display = 'none';
+
+    const grid = document.getElementById('worksGrid');
+    const icons = { 'Music':'🎵','Visual Art':'🎨','Photography':'📸','Video / Film':'🎬','Written Work':'✍️','Performance':'🎭' };
+    const colors = { 'Music':'#FEF3C7','Visual Art':'#ECFDF5','Photography':'#EFF6FF','Video / Film':'#FFF7ED','Written Work':'#F5F3FF','Performance':'#FFF1F2' };
+
+    works.forEach(w => {
+      const key = Object.keys(icons).find(k => w.work_type?.includes(k)) || 'Music';
+      const date = new Date(w.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      const card = document.createElement('div');
+      card.className = 'work-card';
+      card.innerHTML = `<div class="work-type-icon" style="background:${colors[key]||'#FEF3C7'}">${icons[key]||'🎵'}</div><div class="work-title">${w.title}</div><div class="work-date">Registered ${date}</div><span class="work-protected">✓ Protected</span>`;
+      grid.insertBefore(card, document.getElementById('worksEmpty'));
+    });
+
+    // Activity feed
+    document.getElementById('activityFeed').innerHTML = works.slice(0,4).map(w => {
+      const date = new Date(w.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+      return `<div class="activity-item"><div class="activity-dot" style="background:#FEF3C7">🛡️</div><div class="activity-text"><p>${w.title}</p><span>Registered ${date}</span></div></div>`;
+    }).join('');
+  }
+
+  // ── SIGN OUT ──
+  async function signOut() {
+    await _supabase.auth.signOut();
+    localStorage.removeItem('infospotUser');
+    window.location.href = 'index.html';
+  }
+
+  // ── STRIPE ──
+  function goStripe() { window.open(STRIPE_URL, '_blank'); }
+
+  // ── TABS ──
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById(tab === 'overview' ? 'secOverview' : 'secRegister').classList.add('active');
+  }
+
+  // ── INNER PAGES ──
+  function openInner(page) {
+    const overlay = document.getElementById('innerOverlay');
+    overlay.classList.add('open');
+    ['community','workshops','messages','settings'].forEach(p => {
+      document.getElementById('inner' + p.charAt(0).toUpperCase() + p.slice(1)).style.display = p === page ? 'block' : 'none';
+    });
+    // Update nav
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  }
+  function closeInner() {
+    document.getElementById('innerOverlay').classList.remove('open');
+    document.getElementById('navDashboard').classList.add('active');
+  }
+
+  // ── PROFILE DROPDOWN ──
+  function toggleProfile() {
+    document.getElementById('profileDropdown')?.classList.toggle('open');
+    document.getElementById('profileDropdown2')?.classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    if (!document.querySelector('.profile-wrap')?.contains(e.target)) {
+      document.getElementById('profileDropdown')?.classList.remove('open');
+      document.getElementById('profileDropdown2')?.classList.remove('open');
+    }
+    if (!document.querySelector('.notif-wrap')?.contains(e.target))
+      document.getElementById('notifDropdown')?.classList.remove('open');
+  });
+
+  // ── NOTIFICATIONS ──
+  function toggleNotif() { document.getElementById('notifDropdown').classList.toggle('open'); }
+  function clearNotif() {
+    document.getElementById('notifDot').style.display = 'none';
+    document.getElementById('notifDropdown').classList.remove('open');
+  }
+
+  // ── REGISTER WORK ──
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  document.getElementById('certDate').textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  document.getElementById('certId').textContent = 'CERT-' + Math.random().toString(36).substr(2,8).toUpperCase();
+
+  function updateCert() {
+    document.getElementById('certTitle').textContent = document.getElementById('workTitle').value || 'Your Work Title';
+    document.getElementById('certType').textContent = document.getElementById('workType').value || '—';
+    document.getElementById('certCreator').textContent = document.getElementById('creatorName').value || '—';
+  }
+
+  function handleFile(input) {
+    if (input.files[0]) {
+      document.getElementById('uploadIcon').textContent = '✅';
+      document.getElementById('uploadTitle').textContent = input.files[0].name;
+      document.getElementById('uploadDesc').textContent = 'File ready to register.';
+    }
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('drag');
+    const file = e.dataTransfer.files[0];
+    if (file) { document.getElementById('uploadIcon').textContent = '✅'; document.getElementById('uploadTitle').textContent = file.name; }
+  }
+
+  async function submitWork() {
+    const title = document.getElementById('workTitle').value.trim();
+    const type = document.getElementById('workType').value;
+    if (!title || !type) { showToast('Please fill in title and type!'); return; }
+
+    const { data: { session } } = await _supabase.auth.getSession();
+    const userId = session?.user?.id || JSON.parse(localStorage.getItem('infospotUser') || '{}').id;
+    if (!userId) { showToast('Please sign in first.'); return; }
+
+    const certId = 'CERT-' + Math.random().toString(36).substr(2,8).toUpperCase();
+    const { error } = await _supabase.from('works').insert({ user_id: userId, title, work_type: type, cert_id: certId });
+    if (error) { showToast('Error: ' + error.message); return; }
+
+    loadWorks(userId);
+    showSuccess('🛡️', 'Work Registered!', `"${title}" is now protected. Certificate: ${certId}`);
+    switchTab('overview', document.getElementById('tabOverview'));
+  }
+
+  // ── SUCCESS / TOAST ──
+  function showSuccess(icon, title, msg) {
+    document.getElementById('successIcon').textContent = icon;
+    document.getElementById('successTitle').textContent = title;
+    document.getElementById('successMsg').textContent = msg;
+    document.getElementById('successOverlay').classList.add('show');
+  }
+  function closeSuccess() { document.getElementById('successOverlay').classList.remove('show'); }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeInner(); closeSuccess(); } });
+</script>
+</body>
+</html>
