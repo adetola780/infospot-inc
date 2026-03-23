@@ -1,1390 +1,407 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>INFOSPOT INC — Protect Your Art. Own Your Future.</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Cabinet+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --sun:    #F5A623;
-      --fire:   #E8390E;
-      --earth:  #2D6A4F;
-      --gold:   #FFD166;
-      --sky:    #06D6A0;
-      --ink:    #1A0A00;
-      --cream:  #FFF8EE;
-      --warm:   #FEF3C7;
-    }
 
-    /* ── DARK MODE VARIABLES ── */
-    body.dark {
-      --ink:   #F5EFE6;
-      --cream: #111008;
-      --warm:  #1A1508;
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>INFOSPOT - Protect Your Art. Own Your Future.</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,500&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed": "#002201",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#23501e",
+                        "on-tertiary-fixed-variant": "#5f4100",
+                        "surface-container-low": "#f7f4e9",
+                        "outline-variant": "#c2c9bb",
+                        "primary": "#154212",
+                        "on-primary-container": "#9dd090",
+                        "on-secondary-fixed": "#3e0500",
+                        "secondary": "#9f402d",
+                        "on-tertiary-fixed": "#271900",
+                        "surface-container-high": "#ebe8de",
+                        "secondary-fixed-dim": "#ffb4a5",
+                        "on-surface": "#1c1c16",
+                        "tertiary-fixed": "#ffdeaa",
+                        "inverse-primary": "#a1d494",
+                        "surface-tint": "#3b6934",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fd876f",
+                        "on-secondary-fixed-variant": "#802918",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffba2c",
+                        "surface-dim": "#dddad0",
+                        "surface-container-highest": "#e5e2d9",
+                        "surface": "#fcf9ef",
+                        "tertiary": "#4d3500",
+                        "surface-container": "#f1eee4",
+                        "on-tertiary-container": "#fdb619",
+                        "primary-fixed": "#bcf0ae",
+                        "tertiary-container": "#6b4a00",
+                        "surface-variant": "#e5e2d9",
+                        "inverse-surface": "#31312a",
+                        "on-background": "#1c1c16",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9ef",
+                        "primary-fixed-dim": "#a1d494",
+                        "secondary-fixed": "#ffdad3",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f4f1e7",
+                        "on-secondary-container": "#732010",
+                        "outline": "#72796e",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#42493e",
+                        "primary-container": "#2d5a27",
+                        "background": "#fcf9ef"
+                    },
+                    fontFamily: {
+                        "headline": ["Newsreader"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
     }
-    body.dark nav {
-      background: rgba(17,16,8,0.88);
-      border-bottom-color: rgba(245,166,35,0.15);
+.noise-overlay {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBAi9fhHHwAeHteXdufDNHcYQbyY_RKp-Uk25OcSRY0FNTuq_L4FadTudZj1siIdYCwKH8SzV6Tjm78NzH191omClBzw3dzscnfsYIp2r37qSXrXEj6st-D4pp638m_CKI2Asa2Fy8kvxd4mrbHeyRlnw2eBhdZNS19TCBqqLK8rsB14lf_DrV3W0p5M8FlV_ebcz0qAilXoyyxe_IMY3TnqtT3myzLR1JymDsSIVJwuaiUASKpzXUbJVSznxgnvh_7UX4nAx9G9Evo);
+    opacity: 0.03;
+    pointer-events: none
     }
-    body.dark .talent-card { background: #1e1c10; }
-    body.dark .form-group input,
-    body.dark .form-group select {
-      background: #1e1c10;
-      color: var(--ink);
-      border-color: rgba(245,166,35,0.2);
-    }
-    body.dark .modal {
-      background: #1a1808;
-      color: var(--ink);
-    }
-
-    /* ── DARK MODE TOGGLE ── */
-    #darkToggle {
-      background: none;
-      border: 1.5px solid rgba(26,10,0,0.2);
-      border-radius: 50px;
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: border-color 0.2s, background 0.2s;
-      flex-shrink: 0;
-    }
-    #darkToggle:hover { background: rgba(245,166,35,0.12); border-color: var(--sun); }
-    body.dark #darkToggle { border-color: rgba(245,239,230,0.25); }
-    body.dark #darkToggle:hover { background: rgba(245,166,35,0.15); }
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
+.kente-pattern {
+    background-image: radial-gradient(circle at 2px 2px, #c2c9bb 1px, transparent 0);
+    background-size: 24px 24px;
+    opacity: 0.05
+    }</style>
+<style>
     body {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      background: var(--cream);
-      color: var(--ink);
-      overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    /* ── NOISE TEXTURE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.4;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 48px;
-      background: rgba(255,248,238,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1.5px solid rgba(245,166,35,0.2);
-    }
-
-    .nav-logo {
-      font-family: 'Fraunces', serif;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--ink);
-      letter-spacing: -1px;
-    }
-    .nav-logo span { color: var(--fire); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-      list-style: none;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: var(--ink);
-      font-weight: 500;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    .nav-links a:hover { opacity: 1; }
-
-    .nav-cta {
-      background: var(--fire);
-      color: white !important;
-      opacity: 1 !important;
-      padding: 10px 22px;
-      border-radius: 50px;
-      font-weight: 700 !important;
-      transition: transform 0.2s, box-shadow 0.2s !important;
-    }
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(232,57,14,0.35);
-    }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 48px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* African pattern background */
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 70% 50%, rgba(245,166,35,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 90% 20%, rgba(6,214,160,0.1) 0%, transparent 50%),
-        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(232,57,14,0.08) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    /* Geometric Kente-inspired decoration */
-    .hero-geo {
-      position: absolute;
-      right: -60px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 520px;
-      height: 520px;
-      opacity: 0.12;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      max-width: 680px;
-      position: relative;
-      z-index: 2;
-      animation: fadeUp 0.8s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--gold);
-      color: var(--ink);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      padding: 6px 16px;
-      border-radius: 50px;
-      margin-bottom: 24px;
-      animation: fadeUp 0.8s 0.1s ease both;
-    }
-
-    .hero h1 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(3rem, 7vw, 5.5rem);
-      font-weight: 900;
-      line-height: 1.0;
-      letter-spacing: -2px;
-      margin-bottom: 28px;
-      animation: fadeUp 0.8s 0.2s ease both;
-    }
-
-    .hero h1 em {
-      font-style: italic;
-      color: var(--fire);
-      display: block;
-    }
-
-    .hero p {
-      font-size: 1.15rem;
-      line-height: 1.7;
-      color: rgba(26,10,0,0.65);
-      max-width: 520px;
-      margin-bottom: 40px;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      animation: fadeUp 0.8s 0.4s ease both;
-    }
-
-    .btn-primary {
-      background: var(--fire);
-      color: white;
-      padding: 16px 36px;
-      border-radius: 50px;
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(232,57,14,0.4);
-    }
-
-    .btn-secondary {
-      color: var(--ink);
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    .btn-secondary:hover { opacity: 1; }
-    .btn-secondary .arrow {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 1.5px solid currentColor;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 60px;
-      padding-top: 40px;
-      border-top: 1.5px solid rgba(26,10,0,0.1);
-      animation: fadeUp 0.8s 0.5s ease both;
-    }
-    .stat-num {
-      font-family: 'Fraunces', serif;
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--fire);
-    }
-    .stat-label {
-      font-size: 0.8rem;
-      color: rgba(26,10,0,0.5);
-      margin-top: 2px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* ── MARQUEE STRIP ── */
-    .marquee-strip {
-      background: var(--fire);
-      color: white;
-      padding: 14px 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .marquee-inner {
-      display: inline-flex;
-      gap: 0;
-      animation: marquee 20s linear infinite;
-    }
-    .marquee-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 32px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .marquee-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ── FEATURES ── */
-    .features {
-      padding: 100px 48px;
-      background: var(--ink);
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .features::before {
-      content: '';
-      position: absolute;
-      top: -100px; right: -100px;
-      width: 400px; height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--sun);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -1px;
-      margin-bottom: 60px;
-      max-width: 500px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .feature-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 32px;
-      transition: transform 0.3s, background 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .feature-card:hover { transform: translateY(-6px); }
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(232,57,14,0.1), transparent); }
-    .feature-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(6,214,160,0.1), transparent); }
-    .feature-card:nth-child(3)::before { background: linear-gradient(135deg, rgba(245,166,35,0.1), transparent); }
-
-    .feature-icon {
-      width: 52px; height: 52px;
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .feature-card p {
-      font-size: 0.9rem;
-      line-height: 1.7;
-      opacity: 0.6;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .how {
-      padding: 100px 48px;
-      background: var(--warm);
-    }
-
-    .how-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-      margin-top: 60px;
-    }
-
-    .steps { display: flex; flex-direction: column; gap: 32px; }
-
-    .step {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.5s, transform 0.5s;
-    }
-    .step.visible { opacity: 1; transform: translateX(0); }
-
-    .step-num {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: var(--fire);
-      color: white;
-      font-family: 'Fraunces', serif;
-      font-size: 1.1rem;
-      font-weight: 900;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .step-content h4 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .step-content p { font-size: 0.88rem; line-height: 1.6; opacity: 0.65; }
-
-    .how-visual {
-      background: var(--ink);
-      border-radius: 24px;
-      padding: 40px;
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-    .how-visual::before {
-      content: '';
-      position: absolute;
-      bottom: -60px; right: -60px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,166,35,0.2) 0%, transparent 70%);
-    }
-
-    .visual-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(6,214,160,0.15);
-      color: var(--sky);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 50px;
-      margin-bottom: 20px;
-    }
-    .visual-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sky); animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
-
-    .visual-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 24px;
-    }
-
-    .cert-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .cert-icon { font-size: 1.4rem; }
-    .cert-name { font-size: 0.85rem; font-weight: 600; }
-    .cert-sub  { font-size: 0.72rem; opacity: 0.5; margin-top: 2px; }
-    .cert-check {
-      margin-left: auto;
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      background: var(--sky);
-      color: var(--ink);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-    }
-
-    /* ── COMMUNITY ── */
-    .community {
-      padding: 100px 48px;
-      background: var(--cream);
-      text-align: center;
-    }
-
-    .community .section-label { color: var(--earth); }
-
-    .talent-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 60px;
-    }
-
-    .talent-card {
-      background: white;
-      border-radius: 20px;
-      padding: 28px 20px;
-      text-align: center;
-      border: 1.5px solid rgba(26,10,0,0.07);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-    }
-    .talent-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(26,10,0,0.1);
-    }
-
-    .talent-avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      margin: 0 auto 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem;
-    }
-    .talent-name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
-    .talent-role { font-size: 0.78rem; opacity: 0.55; margin-bottom: 12px; }
-    .talent-tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 50px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* ── JOIN / CTA ── */
-    .cta-section {
-      padding: 100px 48px;
-      background: var(--fire);
-      color: white;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      top: -80px; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 300px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.06);
-      pointer-events: none;
-    }
-
-    .cta-section h2 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      margin-bottom: 20px;
-      position: relative;
-    }
-    .cta-section p {
-      font-size: 1.1rem;
-      opacity: 0.8;
-      max-width: 480px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-
-    .btn-white {
-      background: white;
-      color: var(--fire);
-      padding: 16px 40px;
-      border-radius: 50px;
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn-white:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-
-    /* ── SIGN UP MODAL ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(26,10,0,0.7);
-      z-index: 5000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--cream);
-      border-radius: 24px;
-      padding: 48px;
-      width: 100%;
-      max-width: 440px;
-      position: relative;
-      transform: translateY(20px);
-      transition: transform 0.3s;
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-
-    .modal-close {
-      position: absolute;
-      top: 20px; right: 20px;
-      background: rgba(26,10,0,0.07);
-      border: none;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .modal h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-    .modal p { font-size: 0.88rem; opacity: 0.6; margin-bottom: 28px; }
-
-    .modal-tabs {
-      display: flex;
-      gap: 0;
-      background: rgba(26,10,0,0.06);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 28px;
-    }
-    .modal-tab {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      background: none;
-      border-radius: 8px;
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.2s;
-      color: var(--ink);
-      opacity: 0.5;
-    }
-    .modal-tab.active {
-      background: white;
-      opacity: 1;
-      box-shadow: 0 2px 8px rgba(26,10,0,0.1);
-    }
-
-    .form-group { margin-bottom: 16px; }
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      opacity: 0.7;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid rgba(26,10,0,0.12);
-      border-radius: 10px;
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 0.9rem;
-      background: white;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus, .form-group select:focus {
-      border-color: var(--fire);
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 14px;
-      background: var(--fire);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    .modal-switch {
-      text-align: center;
-      font-size: 0.82rem;
-      margin-top: 16px;
-      opacity: 0.6;
-    }
-    .modal-switch a { color: var(--fire); cursor: pointer; font-weight: 600; }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--ink);
-      color: white;
-      padding: 60px 48px 32px;
-    }
-
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 40px;
-      flex-wrap: wrap;
-      padding-bottom: 40px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      margin-bottom: 28px;
-    }
-
-    .footer-logo {
-      font-family: 'Fraunces', serif;
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-    .footer-logo span { color: var(--sun); }
-    .footer-tagline { font-size: 0.82rem; opacity: 0.4; margin-top: 6px; }
-
-    .footer-links h4 {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      opacity: 0.4;
-      margin-bottom: 14px;
-    }
-    .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { color: white; text-decoration: none; font-size: 0.88rem; opacity: 0.6; transition: opacity 0.2s; }
-    .footer-links a:hover { opacity: 1; }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      opacity: 0.35;
-    }
-
-
-    /* ── MOBILE NAV ── */
-    .mobile-menu-btn {
-      display: none;
-      background: none; border: none;
-      font-size: 1.5rem; cursor: pointer;
-      color: var(--ink); padding: 4px;
-    }
-    body.dark .mobile-menu-btn { color: var(--ink); }
-
-    .mobile-nav-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(26,10,0,0.5);
-      z-index: 999;
-      backdrop-filter: blur(4px);
-    }
-    .mobile-nav-overlay.open { display: block; }
-
-    .mobile-nav-drawer {
-      position: fixed; top: 0; right: -100%;
-      width: 280px; height: 100%;
-      background: var(--cream);
-      z-index: 1000;
-      padding: 28px 24px;
-      display: flex; flex-direction: column; gap: 4px;
-      transition: right 0.3s ease;
-      overflow-y: auto;
-    }
-    body.dark .mobile-nav-drawer { background: #1a1808; }
-    .mobile-nav-drawer.open { right: 0; }
-
-    .mobile-nav-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px;
-    }
-    .mobile-nav-logo { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; color: var(--ink); letter-spacing: -0.5px; }
-    .mobile-nav-logo span { color: var(--fire); }
-    .mobile-nav-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--ink); }
-
-    .mobile-nav-link {
-      display: block; padding: 13px 12px;
-      font-size: 0.95rem; font-weight: 600;
-      color: var(--ink); text-decoration: none;
-      border-radius: 10px; transition: background 0.15s;
-      border: none; background: none; text-align: left;
-      font-family: 'Cabinet Grotesk', sans-serif; cursor: pointer; width: 100%;
-    }
-    .mobile-nav-link:hover { background: rgba(245,166,35,0.1); }
-    .mobile-nav-divider { height: 1px; background: var(--border); margin: 8px 0; }
-    .mobile-nav-cta {
-      display: block; width: 100%;
-      background: var(--fire); color: white;
-      padding: 14px; border-radius: 50px;
-      font-weight: 700; font-size: 0.95rem;
-      text-align: center; text-decoration: none;
-      margin-top: 12px; border: none; cursor: pointer;
-      font-family: 'Cabinet Grotesk', sans-serif;
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 16px 20px; }
-      .nav-links { display: none !important; }
-      .mobile-menu-btn { display: block !important; }
-      #darkToggle { width: 34px; height: 34px; font-size: 0.9rem; }
-    }
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      .hero { padding: 100px 24px 60px; }
-      .hero-stats { gap: 24px; }
-      .features, .how, .community, .cta-section { padding: 70px 24px; }
-      .how-grid { grid-template-columns: 1fr; gap: 40px; }
-      footer { padding: 48px 24px 24px; }
-      .footer-top { flex-direction: column; }
-      .modal { padding: 32px 24px; margin: 16px; }
+      min-height: max(884px, 100dvh);
     }
   </style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">INFOSPOT<span>.</span></div>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#community">Community</a></li>
-    <li><a href="#" onclick="requireAuth('infospot-legal.html')">Legal</a></li>
-    <li><a href="#" onclick="requireAuth('infospot-outsource.html')">Services</a></li>
-    <!-- Shown when logged OUT -->
-    <li id="navSignIn"><a href="#" onclick="openModal('signin')">Sign In</a></li>
-    <li id="navJoin"><a href="#" class="nav-cta" onclick="openModal('signup')">Join Free →</a></li>
-    <!-- Shown when logged IN -->
-    <li id="navProfile" style="display:none;">
-      <div class="landing-profile-wrap">
-        <div class="landing-avatar" id="landingAvatar" onclick="toggleLandingProfile()">A</div>
-        <div class="landing-profile-dropdown" id="landingProfileDropdown">
-          <div class="landing-profile-header">
-            <div class="landing-profile-avatar-lg" id="landingAvatarLg">A</div>
-            <div>
-              <div class="landing-profile-name" id="landingProfileName">Loading...</div>
-              <div class="landing-profile-email" id="landingProfileEmail"></div>
-            </div>
-          </div>
-          <a href="infospot-app.html" class="landing-profile-item">🏠 Go to Dashboard</a>
-          <a href="infospot-legal.html" class="landing-profile-item">⚖️ Legal Booking</a>
-          <a href="infospot-outsource.html" class="landing-profile-item">🛍️ Services</a>
-          <button class="landing-profile-item danger" onclick="landingSignOut()">🚪 Sign Out</button>
-        </div>
-      </div>
-    </li>
-  </ul>
-  <button id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
-  <button class="mobile-menu-btn" onclick="openMobileNav()" aria-label="Menu" style="display:none;">☰</button>
+  </head>
+<body class="bg-surface font-body text-on-surface overflow-x-hidden selection:bg-secondary/30">
+<!-- Noise Layer -->
+<div class="fixed inset-0 noise-overlay z-[60]"></div>
+<!-- Navigation -->
+<header class="bg-[#fcf9ef] dark:bg-[#1c1c16] docked full-width top-0 z-50 transition-transform">
+<nav class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-serif text-2xl font-bold tracking-tighter text-[#154212] dark:text-[#f7f4e9]" href="#">INFOSPOT.</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#154212] dark:text-[#ffba2c] font-bold border-b-2 border-[#154212] font-sans text-sm tracking-wide" href="#">Home</a>
+<a class="text-[#1c1c16]/70 dark:text-[#fcf9ef]/70 font-medium hover:text-[#9f402d] transition-colors duration-300 font-sans text-sm tracking-wide" href="#">Protect</a>
+<a class="text-[#1c1c16]/70 dark:text-[#fcf9ef]/70 font-medium hover:text-[#9f402d] transition-colors duration-300 font-sans text-sm tracking-wide" href="#">Skills</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="hidden md:block font-label text-sm font-bold text-primary uppercase tracking-widest hover:text-secondary transition-colors" href="#">Sign In</a>
+<button class="bg-primary-container text-on-primary rounded-full px-6 py-2.5 text-sm font-bold tracking-tight scale-95 active:scale-90 transition-transform shadow-sm">Join Free</button>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
 </nav>
-
-<!-- MOBILE NAV DRAWER -->
-<div class="mobile-nav-overlay" id="mobileOverlay" onclick="closeMobileNav()"></div>
-<div class="mobile-nav-drawer" id="mobileDrawer">
-  <div class="mobile-nav-header">
-    <div class="mobile-nav-logo">INFOSPOT<span>.</span></div>
-    <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
-  </div>
-  <a href="#features" class="mobile-nav-link" onclick="closeMobileNav()">Features</a>
-  <a href="#how" class="mobile-nav-link" onclick="closeMobileNav()">How it works</a>
-  <a href="#community" class="mobile-nav-link" onclick="closeMobileNav()">Community</a>
-  <button class="mobile-nav-link" onclick="requireAuth('infospot-legal.html'); closeMobileNav();">Legal Booking</button>
-  <button class="mobile-nav-link" onclick="requireAuth('infospot-outsource.html'); closeMobileNav();">Services</button>
-  <div class="mobile-nav-divider"></div>
-  <button class="mobile-nav-link" id="mobileSignIn" onclick="openModal('signin'); closeMobileNav();">Sign In</button>
-  <a href="#" class="mobile-nav-cta" id="mobileJoin" onclick="openModal('signup'); closeMobileNav();">Join Free →</a>
-  <div id="mobileProfileSection" style="display:none">
-    <div class="mobile-nav-divider"></div>
-    <a href="infospot-app.html" class="mobile-nav-link">🏠 Go to Dashboard</a>
-    <button class="mobile-nav-link" style="color:var(--fire)" onclick="landingSignOut()">🚪 Sign Out</button>
-  </div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative pt-24 pb-16 px-6 overflow-hidden min-h-[751px] flex flex-col justify-center">
+<div class="absolute inset-0 kente-pattern z-0"></div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+<div class="text-left space-y-8">
+<div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-1.5 rounded-full border border-secondary/20">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-xs font-bold tracking-widest uppercase font-label">🌍 Built for African Creatives</span>
 </div>
-
-<!-- HERO -->
-<section class="hero">
-  <!-- Kente-inspired SVG decoration -->
-  <svg class="hero-geo" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="80" height="80" fill="#E8390E"/>
-    <rect x="80" y="0" width="80" height="80" fill="#F5A623"/>
-    <rect x="160" y="0" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="240" y="0" width="80" height="80" fill="#E8390E"/>
-    <rect x="320" y="0" width="80" height="80" fill="#F5A623"/>
-    <rect x="0" y="80" width="80" height="80" fill="#F5A623"/>
-    <rect x="80" y="80" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="160" y="80" width="80" height="80" fill="#E8390E"/>
-    <rect x="240" y="80" width="80" height="80" fill="#F5A623"/>
-    <rect x="320" y="80" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="0" y="160" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="80" y="160" width="80" height="80" fill="#E8390E"/>
-    <rect x="160" y="160" width="80" height="80" fill="#F5A623"/>
-    <rect x="240" y="160" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="320" y="160" width="80" height="80" fill="#E8390E"/>
-    <rect x="0" y="240" width="80" height="80" fill="#E8390E"/>
-    <rect x="80" y="240" width="80" height="80" fill="#F5A623"/>
-    <rect x="160" y="240" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="240" y="240" width="80" height="80" fill="#E8390E"/>
-    <rect x="320" y="240" width="80" height="80" fill="#F5A623"/>
-    <rect x="0" y="320" width="80" height="80" fill="#F5A623"/>
-    <rect x="80" y="320" width="80" height="80" fill="#2D6A4F"/>
-    <rect x="160" y="320" width="80" height="80" fill="#E8390E"/>
-    <rect x="240" y="320" width="80" height="80" fill="#F5A623"/>
-    <rect x="320" y="320" width="80" height="80" fill="#2D6A4F"/>
-  </svg>
-
-  <div class="hero-content">
-    <div class="hero-tag">🌍 Built for African Creatives</div>
-    <h1>
-      Protect Your Art.
-      <em>Own Your Future.</em>
-    </h1>
-    <p>INFOSPOT INC is the home for African musicians and artists to protect their work from theft, connect with fellow creatives, and grow their craft — freely and fearlessly.</p>
-    <div class="hero-actions">
-      <a href="#" class="btn-primary" onclick="openModal('signup')">Start for Free →</a>
-      <a href="#how" class="btn-secondary">
-        See how it works
-        <div class="arrow">↓</div>
-      </a>
-    </div>
-    <div class="hero-stats">
-      <div>
-        <div class="stat-num">2,400+</div>
-        <div class="stat-label">Artists Protected</div>
-      </div>
-      <div>
-        <div class="stat-num">12K+</div>
-        <div class="stat-label">Works Registered</div>
-      </div>
-      <div>
-        <div class="stat-num">18</div>
-        <div class="stat-label">African Countries</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <!-- Repeated twice for seamless loop -->
-    <span class="marquee-item"><span class="marquee-dot"></span>Copyright Protection</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Artist Community</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Skill Development</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Work Registration</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Talent Network</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>African Creatives</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Music & Art</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Copyright Protection</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Artist Community</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Skill Development</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Work Registration</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Talent Network</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>African Creatives</span>
-    <span class="marquee-item"><span class="marquee-dot"></span>Music & Art</span>
-  </div>
+<h1 class="font-headline text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tighter text-primary">
+                        Protect Your Art.<br/>
+<span class="italic text-secondary font-medium">Own Your Future.</span>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        The definitive digital heritage vault for the African creative soul. Secure your intellectual property and thrive in the global economy.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold px-10 py-5 rounded-full text-lg shadow-xl shadow-primary/20 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
+                            Start for Free
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="border-2 border-outline-variant/30 font-bold px-10 py-5 rounded-full text-lg hover:bg-surface-container-low transition-colors">
+                            Explore Works
+                        </button>
 </div>
-
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="section-label">What We Offer</div>
-  <h2 class="section-title">Everything a creative needs to thrive</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon" style="background:rgba(232,57,14,0.15)">🛡️</div>
-      <h3>Work Protection</h3>
-      <p>Register your music, art, and creative works with a timestamp certificate. Prove ownership and protect yourself from theft and plagiarism instantly.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon" style="background:rgba(6,214,160,0.15)">🤝</div>
-      <h3>Creative Network</h3>
-      <p>Connect with thousands of African musicians, visual artists, photographers, and creatives. Collaborate, share, and grow together across 18 countries.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon" style="background:rgba(245,166,35,0.15)">📚</div>
-      <h3>Skill Development</h3>
-      <p>Access workshops, masterclasses, and resources tailored for African creatives. Learn music production, art business, copyright law, and more.</p>
-    </div>
-  </div>
+</div>
+<!-- Bento Style Stats/Visual -->
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 relative h-64 rounded-xl overflow-hidden shadow-2xl">
+<img alt="African textile close up" class="w-full h-full object-cover" data-alt="Close-up of rich African textile patterns and textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnwmnF8xP2DvGohYxfw3DigAGXRghl2OVny7TajKwFfiZkkTUzDmJmc8a6d5S8bHwbLyNpXemQraqRzIfrUNp7E1zg7eXHHcAdd4YDB1Z10NGfQaJ6FtupMDWjpxKReXsznKIgnzXHFBC4iWzNNQnhTiMDOC-yE8lL8wJZknY2tM66rx-mti4yTayEmOXCuK6HM4mymgZS5veffSUCwV25oX1Kvl3JPDZmnP6YHEr4zqCXCCyc3u83VvkhhUgOhpc0i5ZaSsMrcLiK"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-8">
+<div class="text-on-primary">
+<span class="font-serif italic text-3xl">Featured Heritage</span>
+<p class="text-sm opacity-80 uppercase tracking-widest mt-2">Adinkra Patterns • Ghana</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-4xl text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<div class="text-4xl font-headline font-bold text-primary">12k+</div>
+<div class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Artists Protected</div>
+</div>
+</div>
+<div class="bg-primary p-6 rounded-xl text-on-primary flex flex-col justify-between aspect-square shadow-lg">
+<span class="material-symbols-outlined text-4xl text-secondary-container">palette</span>
+<div>
+<div class="text-4xl font-headline font-bold">450k+</div>
+<div class="text-xs font-label uppercase tracking-widest opacity-70 font-bold">Works Registered</div>
+</div>
+</div>
+<div class="col-span-2 bg-surface-container-high p-8 rounded-xl flex items-center justify-between border border-outline-variant/15">
+<div>
+<div class="text-xs font-label uppercase tracking-widest text-secondary font-extrabold mb-1">Expanding Footprint</div>
+<div class="text-3xl font-headline font-bold text-primary">54 Countries</div>
+</div>
+<span class="material-symbols-outlined text-5xl text-primary/20">public</span>
+</div>
+</div>
+</div>
 </section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="section-label">How It Works</div>
-  <h2 class="section-title" style="font-family:'Fraunces',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;letter-spacing:-1px;">Simple steps to protect your craft</h2>
-  <div class="how-grid">
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>Create Your Profile</h4>
-          <p>Sign up free and build your artist profile. Tell the world who you are and what you create.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>Register Your Work</h4>
-          <p>Upload your music, artwork, or creative work. We timestamp and certify it as yours — instantly.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>Connect & Collaborate</h4>
-          <p>Join the community, find collaborators, attend workshops, and grow your network across Africa.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>Operate Freely</h4>
-          <p>With your work protected, create without fear. INFOSPOT has your back legally and professionally.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="how-visual">
-      <div class="visual-badge">
-        <div class="visual-badge-dot"></div>
-        Live Certificate
-      </div>
-      <div class="visual-title">Your work. Certified. Protected.</div>
-      <div class="cert-card">
-        <div class="cert-icon">🎵</div>
-        <div>
-          <div class="cert-name">Afrobeats Collection Vol.1</div>
-          <div class="cert-sub">Registered · March 2026</div>
-        </div>
-        <div class="cert-check">✓</div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🎨</div>
-        <div>
-          <div class="cert-name">Lagos Street Series</div>
-          <div class="cert-sub">Registered · February 2026</div>
-        </div>
-        <div class="cert-check">✓</div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">📸</div>
-        <div>
-          <div class="cert-name">Nairobi Portraits</div>
-          <div class="cert-sub">Registered · January 2026</div>
-        </div>
-        <div class="cert-check">✓</div>
-      </div>
-    </div>
-  </div>
+<!-- Features Section -->
+<section class="py-24 px-6 bg-surface-container-low relative">
+<div class="max-w-7xl mx-auto">
+<div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
+<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">Empowering the Creative Spirit</h2>
+<p class="text-on-surface-variant font-body">Everything you need to safeguard and scale your creative legacy.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Feature Card 1 -->
+<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
+<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-8 group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:text-on-primary">shield</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Work Protection</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Automated copyright registration and digital watermarking using blockchain-backed heritage licensing.</p>
+<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<!-- Feature Card 2 -->
+<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
+<div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-8 group-hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl text-secondary group-hover:text-on-secondary">hub</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Creative Network</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Connect with fellow visionaries across the continent for cross-border collaborations and secure partnerships.</p>
+<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Join Network <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<!-- Feature Card 3 -->
+<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
+<div class="w-16 h-16 bg-tertiary-fixed-dim/20 rounded-full flex items-center justify-center mb-8 group-hover:bg-tertiary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-3xl text-tertiary group-hover:text-on-tertiary">school</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Skill Development</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6">Expert-led courses on creative business, intellectual property law, and digital asset management.</p>
+<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Browse Courses <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+</div>
+</div>
 </section>
-
-<!-- COMMUNITY -->
-<section class="community" id="community">
-  <div class="section-label">Our Community</div>
-  <h2 style="font-family:'Fraunces',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;letter-spacing:-1px;margin-bottom:12px;">Talents across Africa</h2>
-  <p style="opacity:0.55;max-width:480px;margin:0 auto;line-height:1.6;">Join thousands of creatives already building, protecting, and growing their art with INFOSPOT.</p>
-  <div class="talent-grid">
-    <div class="talent-card">
-      <div class="talent-avatar" style="background:#FEF3C7">🎤</div>
-      <div class="talent-name">Amara O.</div>
-      <div class="talent-role">Singer · Lagos, Nigeria</div>
-      <span class="talent-tag" style="background:#FEF3C7;color:#E8390E">Music</span>
-    </div>
-    <div class="talent-card">
-      <div class="talent-avatar" style="background:#ECFDF5">🎨</div>
-      <div class="talent-name">Kofi A.</div>
-      <div class="talent-role">Visual Artist · Accra, Ghana</div>
-      <span class="talent-tag" style="background:#ECFDF5;color:#2D6A4F">Visual Art</span>
-    </div>
-    <div class="talent-card">
-      <div class="talent-avatar" style="background:#FFF7ED">🎸</div>
-      <div class="talent-name">Fatima B.</div>
-      <div class="talent-role">Producer · Abidjan, Côte d'Ivoire</div>
-      <span class="talent-tag" style="background:#FFF7ED;color:#F5A623">Music</span>
-    </div>
-    <div class="talent-card">
-      <div class="talent-avatar" style="background:#EFF6FF">📸</div>
-      <div class="talent-name">Tendai M.</div>
-      <div class="talent-role">Photographer · Harare, Zimbabwe</div>
-      <span class="talent-tag" style="background:#EFF6FF;color:#1D4ED8">Photography</span>
-    </div>
-  </div>
+<!-- How it Works & Live Certificate Visual -->
+<section class="py-24 px-6 overflow-hidden">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="relative">
+<div class="absolute -top-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
+<!-- Certificate Mockup -->
+<div class="relative bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-2xl border border-outline-variant/20 max-w-md mx-auto transform -rotate-2">
+<div class="flex justify-between items-start mb-8">
+<div class="font-serif text-xl font-bold text-primary italic">INFOSPOT</div>
+<div class="text-[10px] font-label font-bold uppercase tracking-widest px-3 py-1 bg-primary text-on-primary rounded-full">Official Certificate</div>
+</div>
+<div class="space-y-6">
+<div class="border-b border-outline-variant/20 pb-4">
+<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Creative Asset</div>
+<div class="text-xl font-headline font-bold text-primary">Rhythmic Soul Series #04</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Creator</div>
+<div class="text-sm font-bold">Amara Osegbo</div>
+</div>
+<div>
+<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Region</div>
+<div class="text-sm font-bold">Lagos, Nigeria</div>
+</div>
+</div>
+<div class="flex justify-center py-6">
+<div class="w-32 h-32 border-2 border-primary/10 rounded-lg p-2 flex items-center justify-center relative">
+<span class="material-symbols-outlined text-6xl text-primary/20">qr_code_2</span>
+<div class="absolute inset-0 border-2 border-primary animate-pulse opacity-20"></div>
+</div>
+</div>
+<div class="text-center">
+<div class="text-[10px] font-label uppercase tracking-[0.2em] font-bold text-secondary">Verified &amp; Secured</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-12">
+<div class="space-y-4">
+<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">How Heritage Registration Works</h2>
+<p class="text-on-surface-variant max-w-lg">Four simple steps to ensure your artistic legacy remains yours forever.</p>
+</div>
+<div class="space-y-8">
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">1</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary mb-1">Create Your Profile</h4>
+<p class="text-on-surface-variant text-sm">Set up your artist sanctuary and heritage identity in minutes.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">2</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary mb-1">Register Your Work</h4>
+<p class="text-on-surface-variant text-sm">Upload your files and get instant, blockchain-backed protection.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">3</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary mb-1">Connect with Peers</h4>
+<p class="text-on-surface-variant text-sm">Collaborate securely within a curated network of professionals.</p>
+</div>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">4</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary mb-1">Operate Freely</h4>
+<p class="text-on-surface-variant text-sm">Monetize and share your work knowing your rights are protected.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <h2>Your art deserves protection.</h2>
-  <p>Join INFOSPOT INC today — it's free to start. Protect your work, find your people, grow your skills.</p>
-  <a href="#" class="btn-white" onclick="openModal('signup')">Join INFOSPOT Free →</a>
+<!-- Community Section -->
+<section class="py-24 px-6 bg-surface-dim relative overflow-hidden">
+<div class="absolute inset-0 kente-pattern opacity-10"></div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+<div class="max-w-xl space-y-4">
+<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">Voices of the Creative Frontline</h2>
+<p class="text-on-surface-variant">Meet the pioneers using INFOSPOT to redefine African excellence.</p>
+</div>
+<button class="bg-surface p-4 rounded-full shadow-lg hover:shadow-xl transition-all">
+<span class="material-symbols-outlined text-primary">groups</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Community Card 1 -->
+<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
+<div class="aspect-square rounded-lg overflow-hidden relative">
+<img alt="Amara O." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Portrait of a female African singer in studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt2GO1aTcMyBYGcZxfFIfy0XZBYRgu3NxkucqZy0vk0_scL9xqbHhMFrmTMuys0X5s6IMQm6E18NS8qUjAjnKSHw5h4x-z1YCA9wTFiZbiMndWDOT7lDDnDQ-xj3lLysLZnMLGk9hASvCnHbegug_JCV4lU0bs78tIv8mMulHd1yC7elm27mPcbTl3qbl8tURPrVm1BpMCRkcVqBYSBRrYV7hGZk-4UltUhdlBw4bkW1faQ9VMIPDxf227cnQt9rpi0Ztqn6WdRuyC"/>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary">Amara O.</h4>
+<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Singer</p>
+</div>
+</div>
+<!-- Community Card 2 -->
+<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
+<div class="aspect-square rounded-lg overflow-hidden relative">
+<img alt="Kofi A." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Portrait of a male African visual artist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGsOZMd6LZWdyWUC0s-Z767hasaZmgEMacS5sr_dbiGquQtfK2be97WGD0aLhgIaRX0ccQ43GDMQg8KyjtnwISJgzvucRKN6TJaBACNZ0XCzkrcqs4EWuhwN_YaVMRloYjcgLbuRDu8dB04tcjE9mDhgfQadNqZi7OVuiw6fFgv-lceTPjzZGEJ22UfLtRYi-vOVLwPAB_O6ok1tcDkYn974YeJfZitFdcwJ2i6gt5XpEjaSJyQVgWxndm_O0-TV5yTHDNJicAK0wD"/>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary">Kofi A.</h4>
+<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Visual Artist</p>
+</div>
+</div>
+<!-- Community Card 3 -->
+<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
+<div class="aspect-square rounded-lg overflow-hidden relative">
+<img alt="Fatima B." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Female African producer at a soundboard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqI4_oyy4NhfJ8sQURiopjANWJ2-9y7bnzNniPWTkLTGf8ZVBRTtc6AbtOl5GY7gZKoUgKeujbdFRsVKV-HYCUBy6y2ayfyB-cCgFE0qXSt_sUEfMw7Kkci8NLIEL_4hHZN2ue8s2uyWcy94Hx7sN_U47FAHyWGLFveKAGWQRbBAk9plMIcZQYYstOTeUNiBdDNU3R_CsKUr3hm6G9s-N8IdwafVZjTWJpfFv0EjmO6vaIpL99vR6Vxfj5_TjivSWevlHWid3qV5LF"/>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary">Fatima B.</h4>
+<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Producer</p>
+</div>
+</div>
+<!-- Community Card 4 -->
+<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
+<div class="aspect-square rounded-lg overflow-hidden relative">
+<img alt="Tendai M." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Male African photographer holding camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT7y5ofxB-GooaWFNVbwhL7qpW8j70kBlfDp12dqvFmhvZnyFI-yxFX9QZsrqYEwzUCb9yXjG9AX7OS6Q2yVvgwPh-mRS1pwzW8n6-T_QfkzEMKgaNJdHQo_yQQq0g7JoPYVXGrebaDj6oV0w0byAHGbV3k4kyjNcRt_pM9Khb0kF51Ky10nXQDs21ut9dX2O2yhsuTjDnV4N-NR5hozL8Jj2gz3FFkP4p4pfPxUDpb5vOvpAfHCre-0CwRdKeYRxDLrSq-Bmxkt18"/>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary">Tendai M.</h4>
+<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Photographer</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-logo">INFOSPOT<span>.</span></div>
-      <div class="footer-tagline">Protect Your Art. Own Your Future.</div>
-    </div>
-    <div class="footer-links">
-      <h4>Platform</h4>
-      <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#community">Community</a></li>
-        <li><a href="infospot-app.html">Dashboard</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h4>Legal</h4>
-      <ul>
-        <li><a href="infospot-legal.html">Legal Booking</a></li>
-        <li><a href="infospot-outsource.html">Services</a></li>
-        <li><a href="infospot-app.html">Dashboard</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h4>Connect</h4>
-      <ul>
-        <li><a href="https://twitter.com/Adetola0011" target="_blank">Twitter / X</a></li>
-        <li><a href="https://instagram.com/tolarapheal" target="_blank">Instagram</a></li>
-        <li><a href="mailto:adesanyarapheal780@gmail.com?subject=INFOSPOT%20Enquiry" target="_blank">Contact Us</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 INFOSPOT INC. All rights reserved.</span>
-    <span>Made with ❤️ for African Creatives</span>
-  </div>
+<!-- Final CTA Section -->
+<section class="py-24 px-6 relative">
+<div class="max-w-5xl mx-auto bg-primary rounded-xl overflow-hidden shadow-2xl relative">
+<div class="absolute inset-0 kente-pattern opacity-5"></div>
+<div class="relative z-10 px-8 py-20 text-center space-y-8">
+<h2 class="font-headline text-4xl md:text-6xl text-on-primary tracking-tighter max-w-2xl mx-auto">Your art deserves protection.</h2>
+<p class="text-on-primary-container text-lg max-w-md mx-auto opacity-90">Join the movement that's securing the digital future of African creativity.</p>
+<div class="pt-6">
+<button class="bg-tertiary-fixed-dim text-tertiary font-extrabold px-12 py-5 rounded-full text-xl hover:scale-105 transition-transform">Join INFOSPOT Free</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#154212] dark:bg-[#0a1f09] w-full mt-20 py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-4">
+<span class="font-serif text-xl italic text-[#ffba2c]">INFOSPOT.</span>
+<p class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60">© 2024 INFOSPOT INC. PROTECTING THE CREATIVE SOUL.</p>
+<p class="font-sans text-[10px] tracking-widest uppercase text-[#ffba2c]">Made with ❤️ for African Creatives</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Terms of Service</a>
+<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Privacy Policy</a>
+<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Heritage License</a>
+<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Contact Us</a>
+</div>
 </footer>
-
-<!-- SIGN IN / SIGN UP MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h2 id="modalTitle">Join INFOSPOT</h2>
-    <p id="modalSub">Protect your art and connect with creatives across Africa.</p>
-
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
-      <button class="modal-tab" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
-    </div>
-
-    <!-- Sign Up Form -->
-    <div id="formSignup">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" placeholder="e.g. Amara Okafor"/>
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="you@example.com"/>
-      </div>
-      <div class="form-group">
-        <label>I am a...</label>
-        <select>
-          <option value="">Select your talent type</option>
-          <option>🎵 Musician / Singer</option>
-          <option>🎨 Visual Artist</option>
-          <option>🎸 Music Producer</option>
-          <option>📸 Photographer</option>
-          <option>🎭 Performer</option>
-          <option>✍️ Writer / Poet</option>
-          <option>Other Creative</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" placeholder="Create a strong password"/>
-      </div>
-      <button class="btn-submit" onclick="handleSignup()">Create My Account →</button>
-      <div class="modal-switch">Already have an account? <a onclick="switchTab('signin')">Sign In</a></div>
-    </div>
-
-    <!-- Sign In Form -->
-    <div id="formSignin" style="display:none">
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="you@example.com"/>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" placeholder="Your password"/>
-      </div>
-      <button class="btn-submit" onclick="handleSignin()">Sign In →</button>
-      <div class="modal-switch">Don't have an account? <a onclick="switchTab('signup')">Join Free</a></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- SUCCESS TOAST -->
-<div id="toast" style="
-  position:fixed;bottom:30px;left:50%;
-  transform:translateX(-50%) translateY(100px);
-  background:#2D6A4F;color:white;
-  padding:14px 28px;border-radius:50px;
-  font-weight:700;font-size:0.9rem;
-  z-index:9999;transition:transform 0.3s ease;
-  pointer-events:none;white-space:nowrap;
-"></div>
-
-<script>
-  // ── SUPABASE ──
-  const { createClient } = supabase;
-  const _supabase = createClient('https://khfdgdcvgknlgnvwddsb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoZmRnZGN2Z2tubGdudndkZHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTAyOTIsImV4cCI6MjA4OTE4NjI5Mn0.BBbxDRmJc-2g503XrYgX6D8bGRvqug5K-PM7CC-btoM');
-
-  // ── DARK MODE ──
-  function toggleDark() {
-    const isDark = document.body.classList.toggle('dark');
-    document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('infospotDark', isDark ? '1' : '');
-  }
-  if (localStorage.getItem('infospotDark')) {
-    document.body.classList.add('dark');
-    document.getElementById('darkToggle').textContent = '☀️';
-  }
-
-  // Landing page always shows Sign In / Join Free regardless of session
-
-  // ── MODAL ──
-  function openModal(tab) {
-    event && event.preventDefault();
-    document.getElementById('modalOverlay').classList.add('open');
-    switchTab(tab || 'signup');
-  }
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-  }
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  }
-  function switchTab(tab) {
-    const isSignup = tab === 'signup';
-    document.getElementById('tabSignup').classList.toggle('active', isSignup);
-    document.getElementById('tabSignin').classList.toggle('active', !isSignup);
-    document.getElementById('formSignup').style.display = isSignup ? 'block' : 'none';
-    document.getElementById('formSignin').style.display = isSignup ? 'none' : 'block';
-    document.getElementById('modalTitle').textContent = isSignup ? 'Join INFOSPOT' : 'Welcome Back';
-    document.getElementById('modalSub').textContent = isSignup
-      ? 'Protect your art and connect with creatives across Africa.'
-      : 'Sign in to your INFOSPOT account.';
-  }
-
-  // ── SIGN UP ──
-  async function handleSignup() {
-    const fullName = document.querySelector('#formSignup input[type="text"]').value.trim();
-    const email    = document.querySelector('#formSignup input[type="email"]').value.trim();
-    const talentType = document.querySelector('#formSignup select').value;
-    const password = document.querySelector('#formSignup input[type="password"]').value;
-
-    if (!fullName || !email || !password) {
-      showToast('⚠️ Please fill in all fields.'); return;
-    }
-    if (password.length < 6) {
-      showToast('⚠️ Password must be at least 6 characters.'); return;
-    }
-
-    const btn = document.querySelector('#formSignup .btn-submit');
-    btn.textContent = 'Creating account...'; btn.disabled = true;
-
-    const { error } = await _supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: fullName, talent_type: talentType, country: 'Nigeria' } }
-    });
-
-    btn.textContent = 'Create My Account →'; btn.disabled = false;
-
-    if (error) { showToast('❌ ' + error.message); return; }
-    closeModal();
-    // Show email confirmation message instead of redirecting
-    document.getElementById('modalOverlay').classList.add('open');
-    document.getElementById('modalTitle').textContent = '📧 Check Your Email!';
-    document.getElementById('modalSub').textContent = `We sent a confirmation link to ${email}. Click it to activate your account, then come back to sign in.`;
-    document.getElementById('formSignup').style.display = 'none';
-    document.getElementById('formSignin').style.display = 'none';
-    document.querySelector('.modal-tabs').style.display = 'none';
-    showToast('🎉 Account created! Check your email to confirm.');
-  }
-
-  // ── SIGN IN ──
-  async function handleSignin() {
-    const email    = document.querySelector('#formSignin input[type="email"]').value.trim();
-    const password = document.querySelector('#formSignin input[type="password"]').value;
-
-    if (!email || !password) {
-      showToast('⚠️ Please enter your email and password.'); return;
-    }
-
-    const btn = document.querySelector('#formSignin .btn-submit');
-    btn.textContent = 'Signing in...'; btn.disabled = true;
-
-    const { error } = await _supabase.auth.signInWithPassword({ email, password });
-
-    btn.textContent = 'Sign In →'; btn.disabled = false;
-
-    if (error) { showToast('❌ ' + error.message); return; }
-    closeModal();
-    showToast('✅ Welcome back! Redirecting...');
-    setTimeout(() => { window.location.href = 'infospot-app.html'; }, 1500);
-  }
-
-  // ── TOAST ──
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(100px)'; }, 3500);
-  }
-
-  // ── SCROLL ANIMATIONS ──
-  const steps = document.querySelectorAll('.step');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 120);
-      }
-    });
-  }, { threshold: 0.2 });
-  steps.forEach(s => observer.observe(s));
-
-  // Keyboard close modal
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-</script>
-</body>
-</html>
+<!-- Mobile Navigation Shell (BottomNavBar) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pt-3 pb-8 px-4 bg-[#fcf9ef]/80 dark:bg-[#1c1c16]/80 backdrop-blur-xl z-50 rounded-t-[40px] border-t border-[#c2c9bb]/15 shadow-[0_-8px_32px_rgba(28,28,22,0.06)]">
+<a class="flex flex-col items-center justify-center text-[#154212] dark:text-[#ffba2c] scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Protect</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Network</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Skills</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) - Contextual for joining -->
+<button class="fixed bottom-24 right-6 md:right-12 bg-secondary text-on-secondary w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>
