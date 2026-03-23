@@ -1,407 +1,551 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
+<html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>INFOSPOT - Protect Your Art. Own Your Future.</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,500&amp;display=swap" rel="stylesheet"/>
-<!-- Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<title>INFOSPOT INC. | The Digital Bastion</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-primary-fixed": "#002201",
-                        "on-tertiary": "#ffffff",
-                        "on-primary-fixed-variant": "#23501e",
-                        "on-tertiary-fixed-variant": "#5f4100",
-                        "surface-container-low": "#f7f4e9",
-                        "outline-variant": "#c2c9bb",
-                        "primary": "#154212",
-                        "on-primary-container": "#9dd090",
-                        "on-secondary-fixed": "#3e0500",
-                        "secondary": "#9f402d",
-                        "on-tertiary-fixed": "#271900",
-                        "surface-container-high": "#ebe8de",
-                        "secondary-fixed-dim": "#ffb4a5",
-                        "on-surface": "#1c1c16",
-                        "tertiary-fixed": "#ffdeaa",
-                        "inverse-primary": "#a1d494",
-                        "surface-tint": "#3b6934",
-                        "on-error-container": "#93000a",
-                        "secondary-container": "#fd876f",
-                        "on-secondary-fixed-variant": "#802918",
-                        "error": "#ba1a1a",
-                        "surface-container-lowest": "#ffffff",
-                        "tertiary-fixed-dim": "#ffba2c",
-                        "surface-dim": "#dddad0",
-                        "surface-container-highest": "#e5e2d9",
-                        "surface": "#fcf9ef",
-                        "tertiary": "#4d3500",
-                        "surface-container": "#f1eee4",
-                        "on-tertiary-container": "#fdb619",
-                        "primary-fixed": "#bcf0ae",
-                        "tertiary-container": "#6b4a00",
-                        "surface-variant": "#e5e2d9",
-                        "inverse-surface": "#31312a",
-                        "on-background": "#1c1c16",
-                        "on-secondary": "#ffffff",
-                        "surface-bright": "#fcf9ef",
-                        "primary-fixed-dim": "#a1d494",
-                        "secondary-fixed": "#ffdad3",
-                        "on-primary": "#ffffff",
-                        "inverse-on-surface": "#f4f1e7",
-                        "on-secondary-container": "#732010",
-                        "outline": "#72796e",
-                        "on-error": "#ffffff",
-                        "error-container": "#ffdad6",
-                        "on-surface-variant": "#42493e",
-                        "primary-container": "#2d5a27",
-                        "background": "#fcf9ef"
-                    },
-                    fontFamily: {
-                        "headline": ["Newsreader"],
-                        "body": ["Manrope"],
-                        "label": ["Manrope"]
-                    },
-                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
-                },
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#690005",
+              "on-error-container": "#ffdad6",
+              "surface-dim": "#121315",
+              "on-primary-fixed-variant": "#8b1a00",
+              "inverse-primary": "#b62500",
+              "on-secondary-fixed-variant": "#633f00",
+              "surface-container-lowest": "#0d0e0f",
+              "error": "#ffb4ab",
+              "outline": "#ad8880",
+              "tertiary": "#00dbe9",
+              "secondary-fixed": "#ffddb4",
+              "primary-fixed-dim": "#ffb4a3",
+              "on-surface": "#e3e2e3",
+              "primary-container": "#ff5630",
+              "on-primary-fixed": "#3d0600",
+              "surface-container-low": "#1b1c1d",
+              "outline-variant": "#5c4039",
+              "on-secondary-container": "#4f3100",
+              "tertiary-container": "#00a0aa",
+              "on-primary": "#630f00",
+              "on-tertiary-fixed-variant": "#004f54",
+              "error-container": "#93000a",
+              "secondary-fixed-dim": "#ffb955",
+              "primary": "#ffb4a3",
+              "background": "#121315",
+              "surface-variant": "#343536",
+              "inverse-on-surface": "#303032",
+              "surface-container-highest": "#343536",
+              "surface-bright": "#38393a",
+              "tertiary-fixed": "#7df4ff",
+              "on-tertiary": "#00363a",
+              "secondary": "#ffb955",
+              "primary-fixed": "#ffdad2",
+              "surface": "#121315",
+              "surface-container": "#1f2021",
+              "on-secondary-fixed": "#291800",
+              "secondary-container": "#dc9100",
+              "inverse-surface": "#e3e2e3",
+              "tertiary-fixed-dim": "#00dbe9",
+              "surface-container-high": "#292a2b",
+              "on-primary-container": "#570c00",
+              "on-tertiary-container": "#002f33",
+              "on-secondary": "#452b00",
+              "on-surface-variant": "#e6bdb4",
+              "on-tertiary-fixed": "#002022",
+              "surface-tint": "#ffb4a3",
+              "on-background": "#e3e2e3"
             },
-        }
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+          },
+        },
+      }
     </script>
-<style>.material-symbols-outlined {
-    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
-    }
-.noise-overlay {
-    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBAi9fhHHwAeHteXdufDNHcYQbyY_RKp-Uk25OcSRY0FNTuq_L4FadTudZj1siIdYCwKH8SzV6Tjm78NzH191omClBzw3dzscnfsYIp2r37qSXrXEj6st-D4pp638m_CKI2Asa2Fy8kvxd4mrbHeyRlnw2eBhdZNS19TCBqqLK8rsB14lf_DrV3W0p5M8FlV_ebcz0qAilXoyyxe_IMY3TnqtT3myzLR1JymDsSIVJwuaiUASKpzXUbJVSznxgnvh_7UX4nAx9G9Evo);
-    opacity: 0.03;
-    pointer-events: none
-    }
-.kente-pattern {
-    background-image: radial-gradient(circle at 2px 2px, #c2c9bb 1px, transparent 0);
-    background-size: 24px 24px;
-    opacity: 0.05
-    }</style>
 <style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
-<body class="bg-surface font-body text-on-surface overflow-x-hidden selection:bg-secondary/30">
-<!-- Noise Layer -->
-<div class="fixed inset-0 noise-overlay z-[60]"></div>
-<!-- Navigation -->
-<header class="bg-[#fcf9ef] dark:bg-[#1c1c16] docked full-width top-0 z-50 transition-transform">
-<nav class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
-<div class="flex items-center gap-8">
-<a class="font-serif text-2xl font-bold tracking-tighter text-[#154212] dark:text-[#f7f4e9]" href="#">INFOSPOT.</a>
-<div class="hidden md:flex items-center gap-6">
-<a class="text-[#154212] dark:text-[#ffba2c] font-bold border-b-2 border-[#154212] font-sans text-sm tracking-wide" href="#">Home</a>
-<a class="text-[#1c1c16]/70 dark:text-[#fcf9ef]/70 font-medium hover:text-[#9f402d] transition-colors duration-300 font-sans text-sm tracking-wide" href="#">Protect</a>
-<a class="text-[#1c1c16]/70 dark:text-[#fcf9ef]/70 font-medium hover:text-[#9f402d] transition-colors duration-300 font-sans text-sm tracking-wide" href="#">Skills</a>
-</div>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .glow-sm { text-shadow: 0 0 10px rgba(232, 57, 14, 0.5); }
+        .glass-panel {
+            background: rgba(27, 28, 29, 0.4);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(173, 136, 128, 0.15);
+        }
+        .grid-overlay {
+            background-image: radial-gradient(rgba(232, 57, 14, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .scan-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00dbe9, transparent);
+            box-shadow: 0 0 15px #00dbe9;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary min-h-screen overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-[100] flex justify-between items-center px-6 h-16 bg-neutral-900/60 backdrop-blur-xl border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-500" data-icon="terminal">terminal</span>
+<span class="text-2xl font-black tracking-widest text-orange-600 dark:text-orange-500 font-headline">INFOSPOT</span>
 </div>
 <div class="flex items-center gap-4">
-<a class="hidden md:block font-label text-sm font-bold text-primary uppercase tracking-widest hover:text-secondary transition-colors" href="#">Sign In</a>
-<button class="bg-primary-container text-on-primary rounded-full px-6 py-2.5 text-sm font-bold tracking-tight scale-95 active:scale-90 transition-transform shadow-sm">Join Free</button>
-<button class="md:hidden text-primary">
-<span class="material-symbols-outlined">menu</span>
-</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant text-on-surface hover:bg-surface-variant transition-colors" id="darkToggle" onclick="toggleDark()">🌙</button>
+<button class="hidden md:block px-6 py-2 bg-primary text-on-primary font-headline font-bold text-xs uppercase tracking-widest" onclick="openModal('signup')">Join Free</button>
+<div class="md:hidden">
+<button class="material-symbols-outlined text-on-surface" onclick="openMobileNav()">menu</button>
 </div>
-</nav>
+</div>
 </header>
-<main>
+<!-- Mobile Drawer -->
+<div class="fixed inset-0 bg-background/80 backdrop-blur-sm z-[200] opacity-0 pointer-events-none transition-opacity duration-300" id="mobileOverlay" onclick="closeMobileNav()"></div>
+<div class="fixed top-0 right-[-100%] w-64 h-full bg-surface-container-low z-[201] transition-all duration-300 border-l border-outline-variant/20 p-6 flex flex-col gap-6" id="mobileDrawer">
+<div class="flex justify-between items-center">
+<span class="font-headline font-bold text-primary">INFOSPOT</span>
+<button class="material-symbols-outlined" onclick="closeMobileNav()">close</button>
+</div>
+<nav class="flex flex-col gap-4">
+<a class="text-sm font-label uppercase tracking-widest" href="#features" onclick="closeMobileNav()">Features</a>
+<a class="text-sm font-label uppercase tracking-widest" href="#how" onclick="closeMobileNav()">Protocol</a>
+<a class="text-sm font-label uppercase tracking-widest" href="#community" onclick="closeMobileNav()">Nodes</a>
+<button class="text-left text-sm font-label uppercase tracking-widest" onclick="openModal('signin'); closeMobileNav();">Sign In</button>
+<button class="px-4 py-3 bg-primary text-on-primary font-headline font-bold text-xs uppercase text-center" onclick="openModal('signup'); closeMobileNav();">Start for Free</button>
+</nav>
+</div>
+<main class="relative pt-16 grid-overlay">
 <!-- Hero Section -->
-<section class="relative pt-24 pb-16 px-6 overflow-hidden min-h-[751px] flex flex-col justify-center">
-<div class="absolute inset-0 kente-pattern z-0"></div>
-<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-<div class="text-left space-y-8">
-<div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-1.5 rounded-full border border-secondary/20">
-<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-<span class="text-xs font-bold tracking-widest uppercase font-label">🌍 Built for African Creatives</span>
+<section class="relative px-6 pt-16 pb-20 overflow-hidden flex flex-col items-center text-center">
+<div class="mb-6 inline-flex items-center gap-2 px-3 py-1 border border-outline-variant bg-surface-container-low">
+<span class="w-2 h-2 bg-tertiary animate-pulse"></span>
+<span class="text-[10px] font-label font-bold uppercase tracking-[0.2em] text-on-surface-variant">🌍 Built for African Creatives</span>
 </div>
-<h1 class="font-headline text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tighter text-primary">
-                        Protect Your Art.<br/>
-<span class="italic text-secondary font-medium">Own Your Future.</span>
+<h1 class="text-4xl md:text-7xl font-headline font-bold leading-tight tracking-tight text-on-surface mb-6">
+            Protect Your Art.<br/>
+<span class="text-primary-container">Own Your Future.</span>
 </h1>
-<p class="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed">
-                        The definitive digital heritage vault for the African creative soul. Secure your intellectual property and thrive in the global economy.
-                    </p>
-<div class="flex flex-col sm:flex-row gap-4 pt-4">
-<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold px-10 py-5 rounded-full text-lg shadow-xl shadow-primary/20 flex items-center justify-center gap-2 hover:translate-y-[-2px] transition-all">
-                            Start for Free
-                            <span class="material-symbols-outlined">arrow_forward</span>
+<p class="max-w-xl text-on-surface-variant text-sm md:text-base leading-relaxed mb-12">
+            INFOSPOT INC is the digital bastion for African musicians and artists. Protect your work from theft, connect with global nodes, and scale your craft freely.
+        </p>
+<!-- Live Certificate Visual -->
+<div class="relative w-full max-w-sm mb-12 group">
+<div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-cyan-500 opacity-20 blur-xl"></div>
+<div class="relative glass-panel p-6 border border-outline-variant/30 aspect-[4/5] flex flex-col justify-between overflow-hidden">
+<div class="scan-line opacity-50"></div>
+<div class="flex justify-between items-start">
+<div class="text-left">
+<p class="font-label text-[10px] text-tertiary tracking-widest uppercase">Asset ID: 882-AX</p>
+<h3 class="font-headline font-bold text-xl mt-1">Symphony of Lagos</h3>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+</div>
+<div class="w-full aspect-square bg-surface-container-lowest my-4 flex items-center justify-center relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700" data-alt="Abstract vibrant digital wave pattern representing music frequency" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAWncu7wq5WpdMkK8oz9hRqa2qKqDrvi3SFHcsNi0ScGXidvru2H87PnREgcbynWoVf20fhUN0LqIdO-3S0PAU8cyKRS8GFavwPrVL7l4oHPdKVlKF8Zagr2UFps-Ga2hbySnbjfNgG7gMFmVZPX1LxYLJ-EhoLhX2dhS0Zny29-pyE_tj-PhSHRGlDoXGOPMm4IH7NabqG395BXImFX9ISGUaz2gxrJubDESAsZM7ZT8OrYid_xF819S0mjStpIt3BrGhT17LVxwf"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+</div>
+<div class="flex justify-between items-end border-t border-outline-variant/20 pt-4 text-left">
+<div>
+<p class="font-label text-[8px] text-on-surface-variant uppercase tracking-tighter">Owner Node</p>
+<p class="font-label text-sm font-bold">@AMARA_O</p>
+</div>
+<div class="text-right">
+<p class="font-label text-[8px] text-on-surface-variant uppercase tracking-tighter">Timestamp</p>
+<p class="font-label text-sm font-bold">04:22:11:00</p>
+</div>
+</div>
+</div>
+</div>
+<button class="group relative px-10 py-4 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(255,86,48,0.3)] transition-all active:scale-95" onclick="openModal('signup')">
+<span class="relative z-10 flex items-center gap-2">
+                Start for Free <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</span>
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 </button>
-<button class="border-2 border-outline-variant/30 font-bold px-10 py-5 rounded-full text-lg hover:bg-surface-container-low transition-colors">
-                            Explore Works
-                        </button>
-</div>
-</div>
-<!-- Bento Style Stats/Visual -->
-<div class="grid grid-cols-2 gap-4">
-<div class="col-span-2 relative h-64 rounded-xl overflow-hidden shadow-2xl">
-<img alt="African textile close up" class="w-full h-full object-cover" data-alt="Close-up of rich African textile patterns and textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnwmnF8xP2DvGohYxfw3DigAGXRghl2OVny7TajKwFfiZkkTUzDmJmc8a6d5S8bHwbLyNpXemQraqRzIfrUNp7E1zg7eXHHcAdd4YDB1Z10NGfQaJ6FtupMDWjpxKReXsznKIgnzXHFBC4iWzNNQnhTiMDOC-yE8lL8wJZknY2tM66rx-mti4yTayEmOXCuK6HM4mymgZS5veffSUCwV25oX1Kvl3JPDZmnP6YHEr4zqCXCCyc3u83VvkhhUgOhpc0i5ZaSsMrcLiK"/>
-<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-8">
-<div class="text-on-primary">
-<span class="font-serif italic text-3xl">Featured Heritage</span>
-<p class="text-sm opacity-80 uppercase tracking-widest mt-2">Adinkra Patterns • Ghana</p>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col justify-between aspect-square">
-<span class="material-symbols-outlined text-4xl text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-<div>
-<div class="text-4xl font-headline font-bold text-primary">12k+</div>
-<div class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-bold">Artists Protected</div>
-</div>
-</div>
-<div class="bg-primary p-6 rounded-xl text-on-primary flex flex-col justify-between aspect-square shadow-lg">
-<span class="material-symbols-outlined text-4xl text-secondary-container">palette</span>
-<div>
-<div class="text-4xl font-headline font-bold">450k+</div>
-<div class="text-xs font-label uppercase tracking-widest opacity-70 font-bold">Works Registered</div>
-</div>
-</div>
-<div class="col-span-2 bg-surface-container-high p-8 rounded-xl flex items-center justify-between border border-outline-variant/15">
-<div>
-<div class="text-xs font-label uppercase tracking-widest text-secondary font-extrabold mb-1">Expanding Footprint</div>
-<div class="text-3xl font-headline font-bold text-primary">54 Countries</div>
-</div>
-<span class="material-symbols-outlined text-5xl text-primary/20">public</span>
-</div>
-</div>
-</div>
 </section>
+<!-- Marquee -->
+<div class="w-full bg-primary-container py-3 overflow-hidden border-y border-outline-variant/20">
+<div class="flex whitespace-nowrap animate-marquee">
+<div class="flex items-center gap-12 px-6">
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Copyright Protection</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Artist Community</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Skill Development</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Work Registration</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Talent Network</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+</div>
+<!-- Duplicate for infinite effect -->
+<div class="flex items-center gap-12 px-6">
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Copyright Protection</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Artist Community</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Skill Development</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Work Registration</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+<span class="font-label text-[10px] font-bold uppercase tracking-[0.4em] text-on-primary">Talent Network</span>
+<span class="w-2 h-2 bg-on-primary rotate-45"></span>
+</div>
+</div>
+</div>
 <!-- Features Section -->
-<section class="py-24 px-6 bg-surface-container-low relative">
-<div class="max-w-7xl mx-auto">
-<div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
-<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">Empowering the Creative Spirit</h2>
-<p class="text-on-surface-variant font-body">Everything you need to safeguard and scale your creative legacy.</p>
+<section class="px-6 py-24 bg-surface-container-lowest" id="features">
+<div class="flex flex-col mb-16">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-primary mb-2">Capabilities</h2>
+<h3 class="font-headline text-4xl font-bold text-on-surface">Everything a creative needs</h3>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-<!-- Feature Card 1 -->
-<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
-<div class="w-16 h-16 bg-primary-container/10 rounded-full flex items-center justify-center mb-8 group-hover:bg-primary-container transition-colors">
-<span class="material-symbols-outlined text-3xl text-primary group-hover:text-on-primary">shield</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="glass-panel p-8 border-l-4 border-l-primary group hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 flex items-center justify-center bg-primary-container/10 border border-primary-container/20 mb-6">
+<span class="material-symbols-outlined text-primary">lock_open</span>
 </div>
-<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Work Protection</h3>
-<p class="text-on-surface-variant leading-relaxed mb-6">Automated copyright registration and digital watermarking using blockchain-backed heritage licensing.</p>
-<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+<h4 class="font-headline font-bold text-xl mb-4">Work Protection</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Automated IP monitoring and forensic digital watermarking for all your creative assets. Prove ownership instantly.</p>
+<div class="h-1 w-full bg-surface-container-high relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
 </div>
-<!-- Feature Card 2 -->
-<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
-<div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-8 group-hover:bg-secondary transition-colors">
-<span class="material-symbols-outlined text-3xl text-secondary group-hover:text-on-secondary">hub</span>
 </div>
-<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Creative Network</h3>
-<p class="text-on-surface-variant leading-relaxed mb-6">Connect with fellow visionaries across the continent for cross-border collaborations and secure partnerships.</p>
-<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Join Network <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+<!-- Card 2 -->
+<div class="glass-panel p-8 border-l-4 border-l-tertiary group hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 flex items-center justify-center bg-tertiary/10 border border-tertiary/20 mb-6">
+<span class="material-symbols-outlined text-tertiary">hub</span>
 </div>
-<!-- Feature Card 3 -->
-<div class="bg-surface p-10 rounded-xl group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/10">
-<div class="w-16 h-16 bg-tertiary-fixed-dim/20 rounded-full flex items-center justify-center mb-8 group-hover:bg-tertiary-fixed-dim transition-colors">
-<span class="material-symbols-outlined text-3xl text-tertiary group-hover:text-on-tertiary">school</span>
+<h4 class="font-headline font-bold text-xl mb-4">Creative Network</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Direct gateway to verified African talents and global partnership nodes. Collaborate across 18 countries.</p>
+<div class="h-1 w-full bg-surface-container-high relative overflow-hidden">
+<div class="absolute inset-0 bg-tertiary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
 </div>
-<h3 class="font-headline text-2xl font-bold mb-4 text-primary">Skill Development</h3>
-<p class="text-on-surface-variant leading-relaxed mb-6">Expert-led courses on creative business, intellectual property law, and digital asset management.</p>
-<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm tracking-widest uppercase group-hover:gap-4 transition-all" href="#">Browse Courses <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-8 border-l-4 border-l-secondary group hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 flex items-center justify-center bg-secondary/10 border border-secondary/20 mb-6">
+<span class="material-symbols-outlined text-secondary">query_stats</span>
+</div>
+<h4 class="font-headline font-bold text-xl mb-4">Skill Development</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Advanced metrics and training modules to scale your digital presence. Tailored workshops for African creatives.</p>
+<div class="h-1 w-full bg-surface-container-high relative overflow-hidden">
+<div class="absolute inset-0 bg-secondary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
 </div>
 </div>
 </div>
 </section>
-<!-- How it Works & Live Certificate Visual -->
-<section class="py-24 px-6 overflow-hidden">
-<div class="max-w-7xl mx-auto">
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-<div class="relative">
-<div class="absolute -top-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
-<!-- Certificate Mockup -->
-<div class="relative bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-2xl border border-outline-variant/20 max-w-md mx-auto transform -rotate-2">
-<div class="flex justify-between items-start mb-8">
-<div class="font-serif text-xl font-bold text-primary italic">INFOSPOT</div>
-<div class="text-[10px] font-label font-bold uppercase tracking-widest px-3 py-1 bg-primary text-on-primary rounded-full">Official Certificate</div>
+<!-- How It Works Section -->
+<section class="px-6 py-24" id="how">
+<div class="text-center mb-20">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-tertiary mb-2">Protocol</h2>
+<h3 class="font-headline text-4xl font-bold text-on-surface">System Sequence</h3>
 </div>
-<div class="space-y-6">
-<div class="border-b border-outline-variant/20 pb-4">
-<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Creative Asset</div>
-<div class="text-xl font-headline font-bold text-primary">Rhythmic Soul Series #04</div>
+<div class="max-w-4xl mx-auto">
+<div class="relative flex flex-col gap-16 pl-10">
+<div class="absolute left-0 top-0 bottom-0 w-px bg-outline-variant/30"></div>
+<!-- Step 1 -->
+<div class="relative group">
+<div class="absolute -left-[45px] top-1 w-6 h-6 bg-background border-2 border-primary ring-4 ring-background z-10 flex items-center justify-center text-[10px] font-bold">01</div>
+<span class="font-label text-[10px] text-primary tracking-[0.2em] uppercase font-bold">Sequence 01</span>
+<h4 class="font-headline font-bold text-2xl mb-3">Secure Ingress</h4>
+<p class="text-on-surface-variant leading-relaxed">Sign up free and upload your master assets to our encrypted bastion using multi-factor verification.</p>
 </div>
-<div class="grid grid-cols-2 gap-4">
-<div>
-<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Creator</div>
-<div class="text-sm font-bold">Amara Osegbo</div>
+<!-- Step 2 -->
+<div class="relative group">
+<div class="absolute -left-[45px] top-1 w-6 h-6 bg-background border-2 border-outline-variant ring-4 ring-background z-10 flex items-center justify-center text-[10px] font-bold">02</div>
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase font-bold">Sequence 02</span>
+<h4 class="font-headline font-bold text-2xl mb-3">Verification Scan</h4>
+<h4 class="font-headline font-bold text-lg mb-2">Verification Scan</h4>
+<p class="text-on-surface-variant leading-relaxed">AI-driven forensic analysis confirms originality and locks your metadata with a permanent timestamp.</p>
 </div>
-<div>
-<div class="text-[10px] font-label uppercase tracking-tighter opacity-50 mb-1">Region</div>
-<div class="text-sm font-bold">Lagos, Nigeria</div>
+<!-- Step 3 -->
+<div class="relative group">
+<div class="absolute -left-[45px] top-1 w-6 h-6 bg-background border-2 border-outline-variant ring-4 ring-background z-10 flex items-center justify-center text-[10px] font-bold">03</div>
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase font-bold">Sequence 03</span>
+<h4 class="font-headline font-bold text-2xl mb-3">Asset Deployment</h4>
+<p class="text-on-surface-variant leading-relaxed">Your work is live-stamped and distributed across protected network nodes for global visibility.</p>
 </div>
-</div>
-<div class="flex justify-center py-6">
-<div class="w-32 h-32 border-2 border-primary/10 rounded-lg p-2 flex items-center justify-center relative">
-<span class="material-symbols-outlined text-6xl text-primary/20">qr_code_2</span>
-<div class="absolute inset-0 border-2 border-primary animate-pulse opacity-20"></div>
-</div>
-</div>
-<div class="text-center">
-<div class="text-[10px] font-label uppercase tracking-[0.2em] font-bold text-secondary">Verified &amp; Secured</div>
-</div>
-</div>
-</div>
-</div>
-<div class="space-y-12">
-<div class="space-y-4">
-<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">How Heritage Registration Works</h2>
-<p class="text-on-surface-variant max-w-lg">Four simple steps to ensure your artistic legacy remains yours forever.</p>
-</div>
-<div class="space-y-8">
-<div class="flex gap-6 items-start">
-<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">1</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary mb-1">Create Your Profile</h4>
-<p class="text-on-surface-variant text-sm">Set up your artist sanctuary and heritage identity in minutes.</p>
-</div>
-</div>
-<div class="flex gap-6 items-start">
-<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">2</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary mb-1">Register Your Work</h4>
-<p class="text-on-surface-variant text-sm">Upload your files and get instant, blockchain-backed protection.</p>
-</div>
-</div>
-<div class="flex gap-6 items-start">
-<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">3</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary mb-1">Connect with Peers</h4>
-<p class="text-on-surface-variant text-sm">Collaborate securely within a curated network of professionals.</p>
-</div>
-</div>
-<div class="flex gap-6 items-start">
-<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 font-headline font-bold text-xl text-primary">4</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary mb-1">Operate Freely</h4>
-<p class="text-on-surface-variant text-sm">Monetize and share your work knowing your rights are protected.</p>
-</div>
-</div>
-</div>
+<!-- Step 4 -->
+<div class="relative group">
+<div class="absolute -left-[45px] top-1 w-6 h-6 bg-background border-2 border-outline-variant ring-4 ring-background z-10 flex items-center justify-center text-[10px] font-bold">04</div>
+<span class="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase font-bold">Sequence 04</span>
+<h4 class="font-headline font-bold text-2xl mb-3">Global Monetization</h4>
+<p class="text-on-surface-variant leading-relaxed">Operate freely and receive automated royalties through our smart-contract payment layer.</p>
 </div>
 </div>
 </div>
 </section>
 <!-- Community Section -->
-<section class="py-24 px-6 bg-surface-dim relative overflow-hidden">
-<div class="absolute inset-0 kente-pattern opacity-10"></div>
-<div class="max-w-7xl mx-auto relative z-10">
-<div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
-<div class="max-w-xl space-y-4">
-<h2 class="font-headline text-4xl md:text-5xl tracking-tighter text-primary">Voices of the Creative Frontline</h2>
-<p class="text-on-surface-variant">Meet the pioneers using INFOSPOT to redefine African excellence.</p>
+<section class="px-6 py-24 bg-surface-container-low border-t border-outline-variant/10" id="community">
+<div class="mb-16 text-center">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-secondary mb-2">Verified Nodes</h2>
+<h3 class="font-headline text-4xl font-bold text-on-surface">Talents across Africa</h3>
 </div>
-<button class="bg-surface p-4 rounded-full shadow-lg hover:shadow-xl transition-all">
-<span class="material-symbols-outlined text-primary">groups</span>
-</button>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Profile 1 -->
+<div class="p-6 bg-surface-container-lowest border border-outline-variant/20 flex flex-col items-center text-center group hover:border-primary/50 transition-colors">
+<div class="w-24 h-24 mb-6 relative overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Portrait of Amara O. Nigerian Digital Artist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ2cCZFPl2nuErTI6yfrV7M22bQ1WKJ9lDMQuaL2RIjKqceF8BNrs78A62rnA7__mzFIS3K8a0QDNS7INfdm-jVMjTarZeoDPDbH8Hua3_stM-3zQDXS7STo2GZLqDcUZK6ib0uQ9FDMzPndoK3Shuk7GII5S29on41W9yHMV2pUwKAC60KB0kYcuLtv9PgvasqhUKamqAeplYcHkAeP6tu8UTMwadc0oLsHE_5-nbkeB-QIJitV4_W-ijUcBQzjRDRdTeV-jZzpKe"/>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- Community Card 1 -->
-<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
-<div class="aspect-square rounded-lg overflow-hidden relative">
-<img alt="Amara O." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Portrait of a female African singer in studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt2GO1aTcMyBYGcZxfFIfy0XZBYRgu3NxkucqZy0vk0_scL9xqbHhMFrmTMuys0X5s6IMQm6E18NS8qUjAjnKSHw5h4x-z1YCA9wTFiZbiMndWDOT7lDDnDQ-xj3lLysLZnMLGk9hASvCnHbegug_JCV4lU0bs78tIv8mMulHd1yC7elm27mPcbTl3qbl8tURPrVm1BpMCRkcVqBYSBRrYV7hGZk-4UltUhdlBw4bkW1faQ9VMIPDxf227cnQt9rpi0Ztqn6WdRuyC"/>
+<p class="font-headline font-bold text-base">Amara O.</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Lagos, NG</p>
+<span class="mt-4 px-3 py-1 bg-primary/10 text-primary font-label text-[9px] uppercase font-bold tracking-widest border border-primary/20">Musician</span>
 </div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary">Amara O.</h4>
-<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Singer</p>
+<!-- Profile 2 -->
+<div class="p-6 bg-surface-container-lowest border border-outline-variant/20 flex flex-col items-center text-center group hover:border-primary/50 transition-colors">
+<div class="w-24 h-24 mb-6 relative overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Portrait of Kofi A. Ghanaian Sound Engineer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXp0ea4UA5Q4BnjXa-ihRKRmv8F2r2fc332WWa1majNscfLo07f6mjzAAn0g5stot5M8w0f8gPcY_QRA34Z_OfNTthmsb0XZ8NouuyMD-T-Yk019gMYKCJIkhy8KfjZfPPUxjDTjL5wXLJ91BKTolZ-1pcPammNI2xUV4d86HoQ1wWqjQ4VUCdS0Qq8Bzt_arCakz2BaHYpzq1OQvgrBaOM-jIngGzBZ6YmgxBNiROanOMGt6uCmFbSfpKv5Sji_0sRdaXwXi5Oa8e"/>
 </div>
+<p class="font-headline font-bold text-base">Kofi A.</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Accra, GH</p>
+<span class="mt-4 px-3 py-1 bg-tertiary/10 text-tertiary font-label text-[9px] uppercase font-bold tracking-widest border border-tertiary/20">Artist</span>
 </div>
-<!-- Community Card 2 -->
-<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
-<div class="aspect-square rounded-lg overflow-hidden relative">
-<img alt="Kofi A." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Portrait of a male African visual artist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGsOZMd6LZWdyWUC0s-Z767hasaZmgEMacS5sr_dbiGquQtfK2be97WGD0aLhgIaRX0ccQ43GDMQg8KyjtnwISJgzvucRKN6TJaBACNZ0XCzkrcqs4EWuhwN_YaVMRloYjcgLbuRDu8dB04tcjE9mDhgfQadNqZi7OVuiw6fFgv-lceTPjzZGEJ22UfLtRYi-vOVLwPAB_O6ok1tcDkYn974YeJfZitFdcwJ2i6gt5XpEjaSJyQVgWxndm_O0-TV5yTHDNJicAK0wD"/>
+<!-- Profile 3 -->
+<div class="p-6 bg-surface-container-lowest border border-outline-variant/20 flex flex-col items-center text-center group hover:border-primary/50 transition-colors">
+<div class="w-24 h-24 mb-6 relative overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Portrait of Fatima B. Senegalese Illustrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsdsyioLYPJBjIzsP9Gm0SoIemvGUzLhYHyFFtIB-ZWoShI8uJsXvZCpoGm_9yo64GVPNwbAEWjfhSNHOd5wSnDsLkFhH8lnMzv-_okMRp0-uaLAI7OAF4Aifi3uz5or6s4gHSdrsb8C1DW1v1Wuq0sdNQsQvlOvsqo1mYhCt3AOV_xSmxWZTmkrapqaomfG_hCDT5-6iju1o62JO803UiYiteIcYEOcm0QQ4SVAixQMNm6srVOmfoni2ihs1rGgxF1uKZdocqIK94"/>
 </div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary">Kofi A.</h4>
-<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Visual Artist</p>
+<p class="font-headline font-bold text-base">Fatima B.</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Dakar, SN</p>
+<span class="mt-4 px-3 py-1 bg-secondary/10 text-secondary font-label text-[9px] uppercase font-bold tracking-widest border border-secondary/20">Producer</span>
 </div>
+<!-- Profile 4 -->
+<div class="p-6 bg-surface-container-lowest border border-outline-variant/20 flex flex-col items-center text-center group hover:border-primary/50 transition-colors">
+<div class="w-24 h-24 mb-6 relative overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="Portrait of Tendai M. Zimbabwean Producer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNtgehPMnLlO4M2jcmWz8UYx8-2OhI102MRQ-mS-nCETJJTJHKUV76vTji9kMhGPc4F_cE88KcczG_3nYCUk2wEqOxcsC-WBGeppe9RAdKak6skJdf9Wm7e8mIyk8T81EdzStyOfDkfKE3T1yXt43_h1rWqpsjZHrfgq05absAeYOzwm4pTi_g78VZuL4PkUQk2KzwVTBagQrMQkRkpDU2DOYlteRDLxTQkBjA9ybRKX4wSbdU5pkaMAqSdVB3d7L7DPlvIFOfQTx3"/>
 </div>
-<!-- Community Card 3 -->
-<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
-<div class="aspect-square rounded-lg overflow-hidden relative">
-<img alt="Fatima B." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Female African producer at a soundboard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqI4_oyy4NhfJ8sQURiopjANWJ2-9y7bnzNniPWTkLTGf8ZVBRTtc6AbtOl5GY7gZKoUgKeujbdFRsVKV-HYCUBy6y2ayfyB-cCgFE0qXSt_sUEfMw7Kkci8NLIEL_4hHZN2ue8s2uyWcy94Hx7sN_U47FAHyWGLFveKAGWQRbBAk9plMIcZQYYstOTeUNiBdDNU3R_CsKUr3hm6G9s-N8IdwafVZjTWJpfFv0EjmO6vaIpL99vR6Vxfj5_TjivSWevlHWid3qV5LF"/>
-</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary">Fatima B.</h4>
-<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Producer</p>
-</div>
-</div>
-<!-- Community Card 4 -->
-<div class="bg-surface p-6 rounded-xl space-y-6 shadow-sm border border-outline-variant/10 group cursor-pointer hover:-translate-y-2 transition-transform">
-<div class="aspect-square rounded-lg overflow-hidden relative">
-<img alt="Tendai M." class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Male African photographer holding camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT7y5ofxB-GooaWFNVbwhL7qpW8j70kBlfDp12dqvFmhvZnyFI-yxFX9QZsrqYEwzUCb9yXjG9AX7OS6Q2yVvgwPh-mRS1pwzW8n6-T_QfkzEMKgaNJdHQo_yQQq0g7JoPYVXGrebaDj6oV0w0byAHGbV3k4kyjNcRt_pM9Khb0kF51Ky10nXQDs21ut9dX2O2yhsuTjDnV4N-NR5hozL8Jj2gz3FFkP4p4pfPxUDpb5vOvpAfHCre-0CwRdKeYRxDLrSq-Bmxkt18"/>
-</div>
-<div>
-<h4 class="font-headline text-xl font-bold text-primary">Tendai M.</h4>
-<p class="text-secondary text-sm font-label font-bold uppercase tracking-widest mt-1">Photographer</p>
-</div>
-</div>
+<p class="font-headline font-bold text-base">Tendai M.</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">Harare, ZW</p>
+<span class="mt-4 px-3 py-1 bg-primary/10 text-primary font-label text-[9px] uppercase font-bold tracking-widest border border-primary/20">Photographer</span>
 </div>
 </div>
 </section>
-<!-- Final CTA Section -->
-<section class="py-24 px-6 relative">
-<div class="max-w-5xl mx-auto bg-primary rounded-xl overflow-hidden shadow-2xl relative">
-<div class="absolute inset-0 kente-pattern opacity-5"></div>
-<div class="relative z-10 px-8 py-20 text-center space-y-8">
-<h2 class="font-headline text-4xl md:text-6xl text-on-primary tracking-tighter max-w-2xl mx-auto">Your art deserves protection.</h2>
-<p class="text-on-primary-container text-lg max-w-md mx-auto opacity-90">Join the movement that's securing the digital future of African creativity.</p>
-<div class="pt-6">
-<button class="bg-tertiary-fixed-dim text-tertiary font-extrabold px-12 py-5 rounded-full text-xl hover:scale-105 transition-transform">Join INFOSPOT Free</button>
-</div>
-</div>
-</div>
+<!-- CTA Section -->
+<section class="px-6 py-24 bg-primary text-center">
+<h2 class="font-headline text-4xl md:text-6xl font-bold text-on-primary mb-6">Your art deserves protection.</h2>
+<p class="text-on-primary/80 max-w-xl mx-auto mb-10 leading-relaxed font-medium">Join INFOSPOT INC today — it's free to start. Protect your work, find your people, grow your skills.</p>
+<button class="px-10 py-5 bg-on-primary text-primary font-headline font-bold uppercase tracking-widest text-sm hover:bg-white transition-colors" onclick="openModal('signup')">
+            Join INFOSPOT Free →
+        </button>
 </section>
 </main>
 <!-- Footer -->
-<footer class="bg-[#154212] dark:bg-[#0a1f09] w-full mt-20 py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-<div class="flex flex-col items-center md:items-start gap-4">
-<span class="font-serif text-xl italic text-[#ffba2c]">INFOSPOT.</span>
-<p class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60">© 2024 INFOSPOT INC. PROTECTING THE CREATIVE SOUL.</p>
-<p class="font-sans text-[10px] tracking-widest uppercase text-[#ffba2c]">Made with ❤️ for African Creatives</p>
+<footer class="bg-surface-container-lowest border-t border-outline-variant/20 px-6 py-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<span class="text-xl font-black tracking-widest text-primary font-headline">INFOSPOT</span>
 </div>
-<div class="flex flex-wrap justify-center gap-8">
-<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Terms of Service</a>
-<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Privacy Policy</a>
-<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Heritage License</a>
-<a class="font-sans text-xs tracking-widest uppercase text-[#fcf9ef]/60 hover:text-[#ffba2c] underline decoration-dotted transition-colors" href="#">Contact Us</a>
+<p class="text-on-surface-variant text-sm leading-relaxed opacity-70">
+                The leading digital bastion for African creatives to secure their intellectual property.
+            </p>
+</div>
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] mb-6">Platform</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#features">Features</a></li>
+<li><a class="hover:text-primary transition-colors" href="#how">How it works</a></li>
+<li><a class="hover:text-primary transition-colors" href="#community">Nodes</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] mb-6">Legal</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Use</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">IP Rights</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-[0.2em] mb-6">Connect</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">X / Twitter</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Instagram</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-outline-variant/10 text-[10px] font-label uppercase tracking-widest text-on-surface-variant/50">
+<p>© 2026 INFOSPOT INC. ALL RIGHTS RESERVED.</p>
+<p class="mt-4 md:mt-0">MADE FOR AFRICAN CREATIVES</p>
 </div>
 </footer>
-<!-- Mobile Navigation Shell (BottomNavBar) -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pt-3 pb-8 px-4 bg-[#fcf9ef]/80 dark:bg-[#1c1c16]/80 backdrop-blur-xl z-50 rounded-t-[40px] border-t border-[#c2c9bb]/15 shadow-[0_-8px_32px_rgba(28,28,22,0.06)]">
-<a class="flex flex-col items-center justify-center text-[#154212] dark:text-[#ffba2c] scale-110" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Protect</span>
-</a>
-<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
-<span class="material-symbols-outlined">group</span>
-<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Network</span>
-</a>
-<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
-<span class="material-symbols-outlined">school</span>
-<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Skills</span>
-</a>
-<a class="flex flex-col items-center justify-center text-[#1c1c16]/40 dark:text-[#fcf9ef]/40 hover:text-[#9f402d] transition-all duration-300" href="#">
-<span class="material-symbols-outlined">account_circle</span>
-<span class="font-sans text-[11px] uppercase tracking-widest font-bold mt-1">Profile</span>
-</a>
-</nav>
-<!-- Floating Action Button (FAB) - Contextual for joining -->
-<button class="fixed bottom-24 right-6 md:right-12 bg-secondary text-on-secondary w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-40">
-<span class="material-symbols-outlined text-3xl">add</span>
-</button>
+<!-- Auth Modal -->
+<div class="fixed inset-0 bg-background/90 backdrop-blur-lg z-[1000] opacity-0 pointer-events-none transition-all duration-300 flex items-center justify-center p-6" id="modalOverlay" onclick="handleOverlayClick(event)">
+<div class="bg-surface-container-low border border-outline-variant w-full max-w-md p-8 relative">
+<button class="absolute top-4 right-4 material-symbols-outlined text-on-surface-variant hover:text-on-surface" onclick="closeModal()">close</button>
+<h2 class="font-headline font-bold text-3xl mb-2" id="modalTitle">Join INFOSPOT</h2>
+<p class="text-on-surface-variant text-sm mb-8" id="modalSub">Protect your art and connect with creatives across Africa.</p>
+<div class="flex border-b border-outline-variant/30 mb-8">
+<button class="flex-1 pb-4 text-xs font-label uppercase tracking-widest font-bold border-b-2 border-primary" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+<button class="flex-1 pb-4 text-xs font-label uppercase tracking-widest font-bold border-b-2 border-transparent text-on-surface-variant" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
+</div>
+<!-- Sign Up Form -->
+<div class="space-y-5" id="formSignup">
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Full Name</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3" placeholder="Amara Okafor" type="text"/>
+</div>
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Email Address</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3" placeholder="you@example.com" type="email"/>
+</div>
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Talent Type</label>
+<select class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3">
+<option value="">Select Category</option>
+<option>🎵 Musician</option>
+<option>🎨 Visual Artist</option>
+<option>🎸 Music Producer</option>
+<option>📸 Photographer</option>
+</select>
+</div>
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Password</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3" placeholder="••••••••" type="password"/>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest text-xs mt-4" onclick="handleSignup()">Create Account →</button>
+</div>
+<!-- Sign In Form (Hidden by default) -->
+<div class="space-y-5 hidden" id="formSignin">
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Email Address</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3" placeholder="you@example.com" type="email"/>
+</div>
+<div>
+<label class="block text-[10px] font-label uppercase tracking-widest mb-2 font-bold text-on-surface-variant">Password</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant/30 focus:border-primary focus:ring-primary text-sm p-3" placeholder="••••••••" type="password"/>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-bold uppercase tracking-widest text-xs mt-4" onclick="handleSignin()">Sign In →</button>
+</div>
+</div>
+</div>
+<!-- Success Toast -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 translate-y-[200%] bg-tertiary text-on-tertiary px-8 py-4 font-headline font-bold text-xs uppercase tracking-widest z-[2000] transition-all duration-500 shadow-xl" id="toast"></div>
+<script>
+    // --- SUPABASE CLIENT ---
+    const { createClient } = supabase;
+    const _supabase = createClient('https://khfdgdcvgknlgnvwddsb.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoZmRnZGN2Z2tubGdudndkZHNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MTAyOTIsImV4cCI6MjA4OTE4NjI5Mn0.BBbxDRmJc-2g503XrYgX6D8bGRvqug5K-PM7CC-btoM');
+
+    // --- DARK MODE ---
+    function toggleDark() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('infospotDark', isDark ? '1' : '0');
+    }
+    if (localStorage.getItem('infospotDark') === '0') {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('darkToggle').textContent = '🌙';
+    }
+
+    // --- MOBILE NAV ---
+    function openMobileNav() {
+        document.getElementById('mobileOverlay').classList.add('opacity-100', 'pointer-events-all');
+        document.getElementById('mobileDrawer').style.right = '0';
+    }
+    function closeMobileNav() {
+        document.getElementById('mobileOverlay').classList.remove('opacity-100', 'pointer-events-all');
+        document.getElementById('mobileDrawer').style.right = '-100%';
+    }
+
+    // --- MODAL LOGIC ---
+    function openModal(tab) {
+        document.getElementById('modalOverlay').classList.add('opacity-100', 'pointer-events-all');
+        switchTab(tab || 'signup');
+    }
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('opacity-100', 'pointer-events-all');
+    }
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+    function switchTab(tab) {
+        const isSignup = tab === 'signup';
+        document.getElementById('tabSignup').classList.toggle('border-primary', isSignup);
+        document.getElementById('tabSignup').classList.toggle('text-on-surface-variant', !isSignup);
+        document.getElementById('tabSignin').classList.toggle('border-primary', !isSignup);
+        document.getElementById('tabSignin').classList.toggle('text-on-surface-variant', isSignup);
+        
+        document.getElementById('formSignup').classList.toggle('hidden', !isSignup);
+        document.getElementById('formSignin').classList.toggle('hidden', isSignup);
+        
+        document.getElementById('modalTitle').textContent = isSignup ? 'Join INFOSPOT' : 'Welcome Back';
+        document.getElementById('modalSub').textContent = isSignup ? 'Protect your art and connect with creatives across Africa.' : 'Sign in to access your digital bastion.';
+    }
+
+    // --- AUTH ACTIONS ---
+    async function handleSignup() {
+        const fullName = document.querySelector('#formSignup input[type="text"]').value.trim();
+        const email = document.querySelector('#formSignup input[type="email"]').value.trim();
+        const talentType = document.querySelector('#formSignup select').value;
+        const password = document.querySelector('#formSignup input[type="password"]').value;
+
+        if (!fullName || !email || !password) { showToast('⚠️ Please fill all fields.'); return; }
+        
+        const btn = document.querySelector('#formSignup button');
+        btn.textContent = 'TRANSMITTING...'; btn.disabled = true;
+
+        const { error } = await _supabase.auth.signUp({
+            email, password,
+            options: { data: { full_name: fullName, talent_type: talentType } }
+        });
+
+        btn.textContent = 'CREATE ACCOUNT →'; btn.disabled = false;
+        if (error) { showToast('❌ ' + error.message); return; }
+        
+        showToast('🎉 Verification link sent to your email.');
+        setTimeout(closeModal, 2000);
+    }
+
+    async function handleSignin() {
+        const email = document.querySelector('#formSignin input[type="email"]').value.trim();
+        const password = document.querySelector('#formSignin input[type="password"]').value;
+
+        if (!email || !password) { showToast('⚠️ Identification required.'); return; }
+
+        const btn = document.querySelector('#formSignin button');
+        btn.textContent = 'AUTHENTICATING...'; btn.disabled = true;
+
+        const { error } = await _supabase.auth.signInWithPassword({ email, password });
+
+        btn.textContent = 'SIGN IN →'; btn.disabled = false;
+        if (error) { showToast('❌ ' + error.message); return; }
+        
+        showToast('✅ ACCESS GRANTED. REDIRECTING...');
+        setTimeout(() => { window.location.href = 'infospot-app.html'; }, 1500);
+    }
+
+    // --- TOAST ---
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.remove('translate-y-[200%]');
+        setTimeout(() => { t.classList.add('translate-y-[200%]'); }, 3500);
+    }
+</script>
 </body></html>
